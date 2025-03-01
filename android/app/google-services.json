@@ -1,0 +1,122 @@
+{
+  "project_info": {
+    "project_number": "761439720578",
+    "project_id": "english-madhyam-4ceec",
+    "storage_bucket": "english-madhyam-4ceec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761439720578:android:d65591580e690e0f06509b",
+        "android_client_info": {
+          "package_name": "com.education.english_madhyam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761439720578-7i200nuruvn48padnuiv9889rqid10pn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.education.english_madhyam",
+            "certificate_hash": "de6dbdf0d1d659307a01cc309e62fe9b3eb98299"
+          }
+        },
+        {
+          "client_id": "761439720578-8rguig2smr4h2n0cqhacoi1nf06u7ljl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.education.english_madhyam",
+            "certificate_hash": "1ee26fc0bb61743507a4b62e7c132832b6f0e4e2"
+          }
+        },
+        {
+          "client_id": "761439720578-aaitp9vc88s9j3e6bs04lj9le5hbk7ne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.education.english_madhyam",
+            "certificate_hash": "5e428ff70ca346b5a57ad023175fb797e698b018"
+          }
+        },
+        {
+          "client_id": "761439720578-bqud992jivs218fpm5nbhf42e3h5sid0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.education.english_madhyam",
+            "certificate_hash": "9672b78c062f8523e8f73aa009c254bf1efefce6"
+          }
+        },
+        {
+          "client_id": "761439720578-gi165cudo2aohuqp92kdu2oen0o25fse.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.education.english_madhyam",
+            "certificate_hash": "162e3e7f2b2d1934069469b4d481ab11818c54ba"
+          }
+        },
+        {
+          "client_id": "761439720578-ied25rqfr9kengevdq8kfuvoqemus2sq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMww_v8EFxPdB7eqPH1yUmz-_H0HbxQvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761439720578-foel9rj1a9u0do1106abphiolrogai89.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "761439720578-j1vu8m7n3n8fmjtl2rp0okmphpjgb3l8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.EngMadhyam.englishMadhyam"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761439720578:android:8a4afd0d8adf4dd006509b",
+        "android_client_info": {
+          "package_name": "com.englishmadhyam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761439720578-ied25rqfr9kengevdq8kfuvoqemus2sq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMww_v8EFxPdB7eqPH1yUmz-_H0HbxQvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761439720578-foel9rj1a9u0do1106abphiolrogai89.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "761439720578-j1vu8m7n3n8fmjtl2rp0okmphpjgb3l8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.EngMadhyam.englishMadhyam"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
