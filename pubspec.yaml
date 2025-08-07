@@ -87,8 +87,8 @@ dependencies:
   get_storage: ^2.0.3 #its used for store data in local storage
   shared_preferences: ^2.0.7
   adaptive_theme: any
-  youtube_player_iframe:
-  flutter_inappwebview:
+  #youtube_player_iframe:
+  flutter_inappwebview: ^6.0.0
   in_app_purchase_storekit:
   card_swiper: ^3.0.1
   cached_network_image: any
@@ -129,6 +129,8 @@ dev_dependencies:
 
 dependency_overrides:
   ffi: ^2.0.1
+  webview_flutter_android: 3.16.1
+
   #firebase_core_platform_interface: 4.5.2
   #flutter_inappwebview: ^5.7.2+3
 

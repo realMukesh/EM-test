@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import '../../../demo/web_player.dart';
+import '../../../demo/ytplayer.dart';
 import '../../auth/login/login_page.dart';
 import '../../commonController/authenticationController.dart';
 import '../bottom_nav/dashboard_page.dart';
@@ -21,8 +23,10 @@ class SplashController extends GetxController {
     await initialCall();
     Future.delayed(const Duration(seconds: 3), () {
       if (controller!.isLogin()) {
+        //Get.to(YouTubePlayerScreen(videoId: "jGztGfRujSE",));
         Get.offAndToNamed(DashboardPage.routeName);
       } else {
+        //Get.to(YouTubePlayerScreen(videoId: "jGztGfRujSE",));
         Get.offAndToNamed(LoginPage.routeName);
       }
     });

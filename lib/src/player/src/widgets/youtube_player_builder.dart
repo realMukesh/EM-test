@@ -1,7 +1,9 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../player/youtube_player.dart';
+
+import '../../youtube_player_flutter.dart';
 
 /// A wrapper for [YoutubePlayer].
 class YoutubePlayerBuilder extends StatefulWidget {
@@ -74,7 +76,7 @@ class _YoutubePlayerBuilderState extends State<YoutubePlayerBuilder>
       height: orientation == Orientation.landscape ? height : null,
       child: PopScope(
         canPop: !widget.player.controller.value.isFullScreen,
-        /*onPopInvoked: (didPop, _) {
+        /*onPopInvokedWithResult: (didPop, _) {
           if (didPop) return;
           final controller = widget.player.controller;
           if (controller.value.isFullScreen) {

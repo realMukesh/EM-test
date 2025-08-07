@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../../../../player/src/player/youtube_player.dart';
-import '../../../../player/src/utils/youtube_player_controller.dart';
-import '../../../../player/src/utils/youtube_player_flags.dart';
-import '../../../../player/src/widgets/progress_bar.dart';
-import '../../../../player/yt_player.dart';
 import '../../../../resrc/models/model/youtube_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../player/src/player/youtube_player.dart';
+import '../../../player/src/utils/youtube_player_controller.dart';
+import '../../../player/src/utils/youtube_player_flags.dart';
+import '../../../player/src/widgets/progress_bar.dart';
 import '../../../utils/colors/colors.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
