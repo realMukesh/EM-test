@@ -40,15 +40,14 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    /*signingConfigs {
-
+    signingConfigs {
         release {
-            storeFile file('/Users/dishasharma/Downloads/EM-FinalCodeFlutter/certificate/app.jks')
+            storeFile file('/Users/dreamcast/Downloads/certificate/app.jks')
             storePassword 'disha123456'
             keyPassword 'disha123456'
             keyAlias 'hello'
         }
-    }*/
+    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
@@ -56,7 +55,7 @@ android {
         minSdkVersion 21
         multiDexEnabled true
         targetSdkVersion 34
-        versionCode 37
+        versionCode 38
         versionName "1.32"
         compileSdkVersion 34
         signingConfig signingConfigs.debug
@@ -67,13 +66,13 @@ android {
             debuggable true
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            //signingConfig signingConfigs.release
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
             multiDexEnabled false
