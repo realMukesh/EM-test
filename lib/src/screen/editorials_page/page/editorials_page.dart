@@ -1,16 +1,14 @@
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
-import 'package:english_madhyam/src/screen/editorials_page/controller/editorial_controller.dart';
-import 'package:english_madhyam/src/screen/editorials_page/widgets/editorial_listView_widget.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
+import 'package:english_madhyam/src/screen/editorials_page/controller/cousescontroller.dart';
+import 'package:english_madhyam/src/screen/editorials_page/page/editorials.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/utils/custom_roboto/custom_roboto.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
-import '../../../../utils/app_colors.dart';
-import '../../../widgets/common_textview_widget.dart';
 
 class EditorialsPage extends StatefulWidget {
   EditorialsPage({Key? key}) : super(key: key);
@@ -35,7 +33,7 @@ class _EditorialsPageState extends State<EditorialsPage> {
   final _month = DateFormat('MM');
   final _year = DateFormat('y');
   final dates = <Days>[];
-  final EditorialController _courses = Get.put(EditorialController());
+  final CoursesController _courses = Get.put(CoursesController());
 
   String formattedDate = "";
 
@@ -81,9 +79,7 @@ class _EditorialsPageState extends State<EditorialsPage> {
       appBar: AppBar(
         //backgroundColor: themePurpleColor,
         titleSpacing: 0.0,
-        title: const ToolbarTitle(
-          title: "Editorials",
-        ),
+        title: ToolbarTitle(title: "Editorials",),
         centerTitle: false,
         actions: [
           InkWell(
@@ -108,18 +104,13 @@ class _EditorialsPageState extends State<EditorialsPage> {
                   ChooseDate =
                       " ${dateTime!.year}-${dateTime!.month}-${dateTime!.day}";
 
-                  _courses.selectDate(
-                      date: ChooseDate.toString(), isRefresh: true);
+                  _courses.selectDate(date: ChooseDate.toString(),isRefresh: true);
                 });
               }
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.asset(
-                "assets/icon/calendar.svg",
-                color: Theme.of(context).hintColor,
-                height: 30.adaptSize,
-              ),
+              child: SvgPicture.asset("assets/icon/calendar.svg",color: Theme.of(context).hintColor,),
             ),
           )
         ],
@@ -135,14 +126,14 @@ class _EditorialsPageState extends State<EditorialsPage> {
             padding: const EdgeInsets.only(
               left: 18.0,
             ),
-            child: CommonTextViewWidget(
+            child: CustomRoboto(
               text: "Editorials ( ${formattedDate} )",
               fontWeight: FontWeight.w600,
               fontSize: 16,
             ),
           ),
           Flexible(
-            child: EditorialListViewWidget(
+            child: EditorialsList(
               type: 1,
               date: ChooseDate,
             ),
@@ -154,7 +145,7 @@ class _EditorialsPageState extends State<EditorialsPage> {
 
   Widget schedule() {
     return SizedBox(
-      height: 75.adaptSize,
+      height: 72,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(
           shrinkWrap: true,
@@ -187,14 +178,13 @@ class _EditorialsPageState extends State<EditorialsPage> {
                       formattedDate =
                           DateFormat("MMM -d-y").format(dates[index].date);
 
-                      _courses.selectDate(
-                          date: dob.toString(), isRefresh: true);
+                      _courses.selectDate(date: dob.toString(),isRefresh: true);
                     });
                   },
                   child: Container(
                     margin: const EdgeInsets.only(left: 10, right: 10),
-                    height: 75.adaptSize,
-                    width: 40.adaptSize,
+                    height: 72,
+                    width: 40,
                     decoration: BoxDecoration(
                         color: (dates[index].status)
                             ? themePurpleColor
@@ -205,11 +195,13 @@ class _EditorialsPageState extends State<EditorialsPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        CommonTextViewWidgetDarkMode(
-                            text: dates[index].dayStr,
-                            color: dates[index].status == true
-                                ? whiteColor
-                                : Colors.black),
+                        Text(
+                          dates[index].dayStr,
+                          style: TextStyle(
+                              color: dates[index].status == true
+                                  ? whiteColor
+                                  : Colors.black),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
@@ -224,10 +216,7 @@ class _EditorialsPageState extends State<EditorialsPage> {
                                         ? authGreyColor
                                         : Colors.transparent,
                                 borderRadius: BorderRadius.circular(30)),
-                            child: CommonTextViewWidgetDarkMode(
-                              text: dates[index].dateInt,
-                              color: Colors.black,
-                            )),
+                            child: Text(dates[index].dateInt,style: TextStyle(color: Colors.black),)),
                       ],
                     ),
                   ),

@@ -1,9 +1,8 @@
 import 'package:card_swiper/card_swiper.dart';
-import 'package:english_madhyam/src/screen/feed/model/feed_model.dart';
-import 'package:english_madhyam/src/widgets/slider_widget.dart';
+import 'package:english_madhyam/resrc/models/model/feed_model/feed_model.dart';
+import 'package:english_madhyam/resrc/widgets/slider_widget.dart';
 import 'package:english_madhyam/src/screen/pages/page/converter.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -12,20 +11,19 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../../widgets/common_textview_widget.dart';
-
 class CardSliderWidget extends StatefulWidget {
   final List<dynamic> list;
   final Function(int pageCount) paginationCallback;
   final int currentPageCount;
 
-  final WordOfDay? feedData;
+  final WordOfDay ?feedData;
 
   const CardSliderWidget(
       {Key? key,
       required this.currentPageCount,
       required this.list,
-      this.feedData,
+
+        this.feedData,
       required this.paginationCallback})
       : super(key: key);
 
@@ -40,20 +38,21 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
   final SwiperController _swiperController = SwiperController();
   int _currentIndex = 0;
   int _currentPage = 0;
-  bool isPaginating = false;
-  DateTime feedDate = DateTime.now();
+  bool  isPaginating=false;
+  DateTime feedDate=DateTime.now();
   // Get the current date and set the time to midnight (00:00:00)
   DateTime currentDate = DateTime.now();
-  DateTime? currentDateOnly;
-  bool onUndo = true;
+  DateTime ?currentDateOnly ;
+  bool onUndo=true;
   @override
   void initState() {
     super.initState();
     _currentPage = widget.currentPageCount;
 
-    currentDateOnly =
-        DateTime(currentDate.year, currentDate.month, currentDate.day);
+
+    currentDateOnly=DateTime(currentDate.year, currentDate.month, currentDate.day);
   }
+
 
   @override
   void dispose() {
@@ -73,6 +72,7 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
       height: MediaQuery.of(context).size.height * 0.72,
       width: MediaQuery.of(context).size.width,
       child: Swiper(
+
         layout: SwiperLayout.STACK,
         itemHeight: MediaQuery.of(context).size.height * 0.65,
         scrollDirection: Axis.vertical,
@@ -81,11 +81,12 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
         itemCount: widget.list.length,
         curve: Curves.ease,
         viewportFraction: 0.8,
-        index: widget.feedData!.from! - 1,
+index: widget.feedData!.from!-1,
         loop: false,
         scale: 0.8,
         onIndexChanged: (int index) {
-          setState(() {
+
+           setState(() {
             // feedDate=DateTime.parse(widget.list[index].date!);
             // feedDate=DateTime(feedDate.year, feedDate.month, feedDate.day);
             // isLoop=feedDate.isBefore(currentDateOnly!);
@@ -97,9 +98,13 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
             // }
 
             _currentIndex = index;
-          });
-        },
+
+          }  );
+        }
+        ,
         itemBuilder: (c, i) {
+
+
           return cardChild(feedDataModel: widget.list[i], index: i);
         },
       ),
@@ -109,7 +114,9 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
   Widget cardChild({
     required Dataum feedDataModel,
     required int index,
+
   }) {
+
     String htmlMean =
         _htmlConverter.parseHtmlString(feedDataModel.meaning.toString());
     String htmlSnoym =
@@ -118,33 +125,28 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
         _htmlConverter.parseHtmlString(feedDataModel.antonyms.toString());
     String htmlExample =
         _htmlConverter.parseHtmlString(feedDataModel.example.toString());
-    feedDate = DateTime.parse(feedDataModel.date!);
+    feedDate=DateTime.parse(feedDataModel.date!);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_currentPage < widget.feedData!.lastPage!) {
-        ///after 19 items _curentIndex starts again from 0
-        if (_currentIndex + 1 == widget.feedData!.to &&
-            widget.list.length == _currentPage * 20) {
-          _currentPage = _currentPage + 1;
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              "Loading more Data",
-            ),
-            duration: Duration(seconds: 1),
-          ));
 
-          widget.paginationCallback(_currentPage);
-        }
-      } else {
-        // if(_currentIndex+1>= widget.feedData!.total!){
-        //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("No More Data",),duration: Duration(seconds: 1),));
-        //
-        // }
-      }
+if(_currentPage<widget.feedData!.lastPage!){
+  ///after 19 items _curentIndex starts again from 0
+  if (_currentIndex+1 == widget.feedData!.to&&widget.list.length==_currentPage*20) {
+    _currentPage = _currentPage + 1;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Loading more Data",),duration: Duration(seconds: 1),));
+
+    widget.paginationCallback(_currentPage);
+  }
+}else{
+  // if(_currentIndex+1>= widget.feedData!.total!){
+  //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("No More Data",),duration: Duration(seconds: 1),));
+  //
+  // }
+}
     });
 
     return Container(
       decoration: BoxDecoration(
-        color: colorPrimary,
+        color: purpleColor,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -160,8 +162,7 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
           Container(
             height: MediaQuery.of(context).size.height * 0.2,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(24), topLeft: Radius.circular(24)),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(24),topLeft: Radius.circular(24) ),
               image: feedDataModel.image != null
                   ? DecorationImage(
                       image: NetworkImage(
@@ -184,9 +185,8 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                     htmlExample: htmlExample,
                     htmlMean: htmlMean,
                     htmlSnoym: htmlSnoym,
-                    physics: const NeverScrollableScrollPhysics()),
-                if (htmlMean.length + htmlExample.length + htmlSnoym.length >
-                    140)
+                    physics: NeverScrollableScrollPhysics()),
+                if (htmlMean.length + htmlExample.length+htmlSnoym.length > 140)
                   GestureDetector(
                     onTap: () {
                       showDialog(
@@ -200,8 +200,7 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                                   htmlExample: htmlExample,
                                   htmlMean: htmlMean,
                                   htmlSnoym: htmlSnoym,
-                                  physics:
-                                      const AlwaysScrollableScrollPhysics()),
+                                  physics:const AlwaysScrollableScrollPhysics()),
                             );
                           });
                     },
@@ -211,16 +210,15 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                         margin: EdgeInsets.only(bottom: 0),
                         decoration: BoxDecoration(
                             color: purplegrColor,
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(24),
                                 bottomLeft: Radius.circular(24))),
-                        height: 28.adaptSize,
+                        height: 28,
                         width: MediaQuery.of(context).size.width,
-                        child: CommonTextViewWidgetDarkMode(
-                          text: "View More..",
-                          color: white,
-                          fontSize: 16,
-                          align: TextAlign.center,
+                        child: Text(
+                          "View More..",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -246,6 +244,7 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
       child: Column(
         children: [
           InkWell(
+
               onTap: () {
                 _speak(feedDataModel.word!);
               },
@@ -260,18 +259,22 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                   ),
                 ),
               )),
-          CommonTextViewWidgetDarkMode(
-            text: dateFormatConversion(feedDataModel.date.toString()),
-            fontSize: 14,
-            color: Colors.white,
+          Text(
+            dateFormatConversion(feedDataModel.date.toString()),
+            style: GoogleFonts.raleway(
+              fontSize: 14,
+              color: Colors.white,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: CommonTextViewWidgetDarkMode(
-              text: feedDataModel.word.toString(),
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
+            child: Text(
+              feedDataModel.word.toString(),
+              style: GoogleFonts.raleway(
+                fontSize: 24,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -287,19 +290,20 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  child: CommonTextViewWidgetDarkMode(
-                                      text: "Meaning:  ",
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                child: Text("Meaning:  ",
+                                    style: GoogleFonts.raleway(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+                              Expanded(
+                                child: Text(htmlMean,
+                                    style: GoogleFonts.raleway(
                                       fontSize: 16,
                                       color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
-                              Expanded(
-                                  child: CommonTextViewWidgetDarkMode(
-                                text: htmlMean,
-                                fontSize: 16,
-                                color: Colors.white,
-                              )),
+                                    )),
+                              ),
                             ],
                           ),
                         ],
@@ -313,11 +317,11 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                             children: [
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.25,
-                                child: CommonTextViewWidgetDarkMode(
-                                    text: "Synonyms:  ",
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
+                                child: Text("Synonyms:  ",
+                                    style: GoogleFonts.raleway(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
                               ),
                               Expanded(
                                 child: Html(
@@ -345,11 +349,11 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                             children: [
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.25,
-                                child: CommonTextViewWidgetDarkMode(
-                                    text: "Antonyms:  ",
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
+                                child: Text("Antonyms:  ",
+                                    style: GoogleFonts.raleway(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
                               ),
                               Expanded(
                                 child: Html(
@@ -377,11 +381,11 @@ class _CardSliderWidgetState extends State<CardSliderWidget> {
                             children: [
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.25,
-                                child: CommonTextViewWidgetDarkMode(
-                                    text: "Examples:  ",
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600),
+                                child: Text("Examples:  ",
+                                    style: GoogleFonts.raleway(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
                               ),
                               Expanded(
                                 child: Html(

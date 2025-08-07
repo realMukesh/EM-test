@@ -1,7 +1,7 @@
-import 'package:english_madhyam/src/screen/pages/model/cms.dart';
+import 'package:english_madhyam/resrc/models/model/cms.dart';
 import 'package:get/get.dart';
 
-import 'package:english_madhyam/restApi/api_service.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
 
 class CMSSController extends GetxController {
   RxBool loading = false.obs;

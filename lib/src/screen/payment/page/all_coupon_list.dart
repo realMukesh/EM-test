@@ -1,105 +1,131 @@
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
 import 'package:english_madhyam/src/screen/payment/controller/paymentController.dart';
-import 'package:english_madhyam/src/widgets/loading.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 import '../../pages/page/converter.dart';
 
-class UseCoupons extends GetView<PaymentController> {
+class UseCoupons extends StatefulWidget {
   final String planId;
-  UseCoupons({super.key, required this.planId});
 
+  const UseCoupons({Key? key, required this.planId}) : super(key: key);
+
+  @override
+  State<UseCoupons> createState() => _UseCouponsState();
+}
+
+class _UseCouponsState extends State<UseCoupons> {
   final PaymentController _paymentController = Get.find();
   TextEditingController _couponCode = TextEditingController();
-  var _couponId;
-  get couponId => _couponId;
-
   HtmlConverter _htmlConverter = HtmlConverter();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor:whiteColor,
       appBar: AppBar(
+        //backgroundColor: whiteColor,
         elevation: 0.0,
         centerTitle: true,
-        title: const ToolbarTitle(
-          title: 'Apply Coupon',
-        ),
+        title: ToolbarTitle(title: 'Apply Coupon',),
       ),
-      body: GetX<PaymentController>(
-        builder: (controller) {
-          return Stack(
+      body: Container(
+        //color: purpleColor.withOpacity(0.2),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Container(
-                      height: 80,
-                      color: purpleColor.withOpacity(0.2),
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: TextFormField(
-                        enabled: true,
-                        controller: _couponCode,
-                        style: GoogleFonts.roboto(
-                            fontSize: 14, letterSpacing: 0.5),
-                        decoration: InputDecoration(
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: TextButton(
-                                onPressed: () {
-                                  _paymentController.applyCouponApi(
-                                      planId: planId,
-                                      coupon: _couponCode.text.trim(),
-                                      couponId: _couponId.toString());
-                                },
-                                child: CommonTextViewWidget(
-                                  text: "Apply",
-                                  color: purpleColor,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.all(8),
-                            hintText: "Enter your coupon code ",
-                            hintStyle: GoogleFonts.roboto(
-                              fontSize: 17,
-                              color: greyColor,
+              const SizedBox(height: 12,),
+              Container(
+                height: 80,
+                color: purpleColor.withOpacity(0.2),
+                padding: const EdgeInsets.all(20.0),
+                child: TextFormField(
+                  enabled: true,
+                  controller: _couponCode,
+                  style: GoogleFonts.roboto(fontSize: 14, letterSpacing: 0.5),
+                  decoration: InputDecoration(
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          _paymentController.applyCouponContr(
+                              PlanID: widget.planId,
+                              Coupon: _couponCode.text.trim());
+
+                        },
+                        child: Container(
+                            margin: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(2),
+                                border: Border.all(color: purpleColor)),
+                            child: CustomDmSans(
+                              text: "Apply",
+                              color: purpleColor,
                             )),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding:
-                          const EdgeInsets.only(left: 18, top: 14, bottom: 12),
-                      child: CommonTextViewWidget(
-                        text: "Available Coupons",
-                        fontWeight: FontWeight.w600,
+                      contentPadding: const EdgeInsets.all(8),
+                      hintText: "Enter your coupon code ",
+
+                      hintStyle: GoogleFonts.roboto(
                         fontSize: 16,
+                        color: greyColor,
+                      )),
+                ),
+              ),
+              const SizedBox(height: 12,),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(left: 18, top: 14, bottom: 12),
+                child: CustomDmSans(
+                  text: "Available Coupons",
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
+              Obx(
+                () {
+                  if (_paymentController.CouponListloading.value) {
+                    return Center(
+                      child: Lottie.asset(
+                        "assets/animations/loader.json",
+                        height: MediaQuery.of(context).size.height * 0.2,
                       ),
-                    ),
-                    ListView.builder(
+                    );
+                  } else if (_paymentController
+                      .couponListcontr.value.couponsList!.isEmpty) {
+
+                    return Center(
+                      child: Lottie.asset('assets/animations/49993-search.json',
+                          height: MediaQuery.of(context).size.height * 0.2),
+                    );
+                  } else {
+                    return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _paymentController.couponList.length,
+                        itemCount: _paymentController
+                            .couponListcontr.value.couponsList!.length,
                         itemBuilder: (BuildContext ctx, int index) {
+
                           return InkWell(
                             onTap: () {
-                              _couponCode.text = _paymentController
-                                  .couponList[index].couponCode!;
-                              _couponId = _paymentController.couponList[index].id!;
-                              print("_couponId ${_couponId}");
+                              setState(() {
+                                _couponCode.text = _paymentController
+                                    .couponListcontr
+                                    .value
+                                    .couponsList![index]
+                                    .couponCode!;
+                              });
                             },
                             child: Container(
                               height: MediaQuery.of(context).size.height * 0.2,
@@ -110,23 +136,23 @@ class UseCoupons extends GetView<PaymentController> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CommonTextViewWidget(
-                                    text: _paymentController
-                                        .couponList[index].title!,
+                                  CustomDmSans(
+                                    text: _paymentController.couponListcontr
+                                        .value.couponsList![index].title!,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                   ),
-                                  CommonTextViewWidget(
+                                  CustomDmSans(
                                     text:
-                                        "Get ${_paymentController.couponList[index].couponValue} % OFF up to \u{20B9} ${_paymentController.couponList[index].maxDiscount}",
+                                        "Get ${_paymentController.couponListcontr.value.couponsList![index].couponValue} % OFF up to \u{20B9} ${_paymentController.couponListcontr.value.couponsList![index].maxDiscount}",
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
                                   Expanded(
-                                    child: CommonTextViewWidget(
+                                    child: CustomDmSans(
                                       text: _htmlConverter.parseHtmlString(
-                                          _paymentController
-                                              .couponList[index].terms!),
+                                          _paymentController.couponListcontr.value
+                                              .couponsList![index].terms!),
                                       fontSize: 12,
                                     ),
                                   ),
@@ -144,21 +170,25 @@ class UseCoupons extends GetView<PaymentController> {
                                             bottom: 3,
                                             left: 10,
                                             right: 10),
-                                        child: CommonTextViewWidget(
-                                          text: _paymentController
-                                              .couponList[index].couponCode
+                                        child: Text(
+                                          _paymentController
+                                              .couponListcontr
+                                              .value
+                                              .couponsList![index]
+                                              .couponCode
                                               .toString(),
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w300,
-                                          color: purpleColor,
+                                          style: GoogleFonts.roboto(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w300,
+                                              color: purpleColor),
                                         ),
                                       )),
                                   const Divider(
                                     thickness: 0.8,
                                   ),
-                                  CommonTextViewWidget(
+                                  CustomDmSans(
                                     text:
-                                        " You will save \u{20B9} ${_paymentController.couponList[index].maxDiscount} with this code",
+                                        " You will save \u{20B9} ${_paymentController.couponListcontr.value.couponsList![index].maxDiscount} with this code",
                                     fontSize: 10,
                                     color: purpleColor,
                                   )
@@ -166,14 +196,13 @@ class UseCoupons extends GetView<PaymentController> {
                               ),
                             ),
                           );
-                        })
-                  ],
-                ),
-              ),
-              controller.loading.value ? const Loading() : const SizedBox()
+                        });
+                  }
+                },
+              )
             ],
-          );
-        },
+          ),
+        ),
       ),
     );
   }

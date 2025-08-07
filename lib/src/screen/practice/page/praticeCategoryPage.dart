@@ -1,163 +1,158 @@
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/regularTextViewDarkMode.dart';
-import 'package:english_madhyam/src/widgets/showLoadingPage.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/widgets/regularTextView.dart';
+import 'package:english_madhyam/resrc/widgets/showLoadingPage.dart';
 import 'package:english_madhyam/src/screen/practice/controller/praticeController.dart';
-import 'package:english_madhyam/src/screen/practice/page/praticeTabListPage.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
+import 'package:english_madhyam/src/screen/practice/page/praticeListPage.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skeletons/skeletons.dart';
-import '../../../../utils/ui_helper.dart';
-import '../../../utils/colors/colors.dart';
-import '../../../widgets/customImageWidget.dart';
-import '../../../widgets/common_textview_widget.dart';
-import '../../../widgets/loading.dart';
-import '../../../../routes/my_constant.dart';
+import '../../../../resrc/widgets/loading.dart';
+import '../../../../resrc/utils/routes/my_constant.dart';
 import '../../../custom/toolbarTitle.dart';
-import '../../../skeletonView/examSkeletonList.dart';
+import '../../../skeletonView/agendaSkeletonList.dart';
 
-class PraticeCategoryPage extends GetView<PraticeController> {
-  final bool? isSavedQuestions;
-  final String parentcateId;
+class MaterialSubCategoriesPage
+ extends GetView<PraticeController> {
+  bool ?isSavedQuestions;
 
-  PraticeCategoryPage({
-    Key? key,
-    required this.parentcateId,
-    this.isSavedQuestions,
-  }) : super(key: key);
+  String parentcateId="";
+  MaterialSubCategoriesPage
+({Key? key,required this.parentcateId,this.isSavedQuestions}) : super(key: key);
+
 
   final PraticeController _controller = Get.find();
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
 
-  // Loads data from the API
-  void _loadData() async {
-    _controller.getPracticeCategory(
-      parentcateId,
-    );
+  void loadData() async {
+    // monitor network fetch
+    _controller.getSubCategories(parentcateId,isSavedQuestions??false);
     await Future.delayed(const Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
   }
+
+  List<String> color = [
+    "#DBDDFF",
+    "#FFECE7",
+    "#EDF6FF",
+    "#EBFFE5",
+    "#F6F4FF",
+    "#EBFFE5",
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: purpleColor.withOpacity(0.15),
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         centerTitle: true,
         automaticallyImplyLeading: true,
+        shape: const Border(
+            bottom:
+            BorderSide(color: indicatorColor)),
         title: const ToolbarTitle(
-          title: 'Practice Category',
+          title: 'Practice category',
         ),
       ),
       body: GetX<PraticeController>(
-        builder: (_) {
+        builder: (_controller) {
           return Column(
             children: [
               Expanded(
-                child: _loadPraticeCategory(context),
-              ),
+                child: loadPraticeCategory(context),
+              )
             ],
           );
         },
-      ),
+      )
     );
   }
 
-  Widget _loadPraticeCategory(BuildContext context) {
+  Widget loadPraticeCategory(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
+      padding: const EdgeInsets.only(left: 10.0, right: 10, top: 20),
       child: Stack(
         children: [
           RefreshIndicator(
             key: _refreshKey,
             onRefresh: () async {
-              await Future.delayed(
+              return Future.delayed(
                 const Duration(seconds: 1),
-                _loadData,
+                () {
+                  loadData();
+                },
               );
             },
             child: Skeleton(
-              //themeMode: ThemeMode.light,
-              isLoading: _controller.isFirstLoadRunning.value,
+                themeMode: ThemeMode.light,
+                isLoading: _controller.isFirstLoadRunning.value,
               skeleton: const ListAgendaSkeleton(),
               child: ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemCount: _controller.practiceCategoryList.length,
-                itemBuilder: (context, index) {
-                  final practiceQuizData =
-                      _controller.practiceCategoryList[index];
-                  return _buildCategoryItem(practiceQuizData, index,context);
-                },
-              ),
-            ),
+                itemBuilder: (BuildContext ctx, int index) {
+                  var praticeQuizData = _controller.practiceCategoryList[index];
+                  return buildCategoryItem(praticeQuizData,index);
+                },)),
           ),
-          _progressEmptyWidget(_controller.practiceCategoryList),
+          _progressEmptyWidget(false, _controller.practiceCategoryList)
         ],
       ),
     );
   }
 
-  Widget _buildCategoryItem(dynamic practiceQuizData, int index, BuildContext context) {
+  Widget buildCategoryItem(dynamic practiceQuizData,index) {
     return InkWell(
       onTap: () async {
-        _controller.getPracticeChildListData(
-          subCategoryId: practiceQuizData.id.toString(),
-          isRefresh: false,
-          isSavedQuestions: isSavedQuestions ?? false,
-        );
-        Get.to(PracticeListTabPage(
-          subCategoryId: practiceQuizData.id.toString(),
-          isSavedQuestions: isSavedQuestions ?? false,
-        ));
+        _controller.getPracticeChildListData(subCategoryId: practiceQuizData.id.toString(),isRefresh: false,isSavedQuestions: isSavedQuestions??false);
+        Get.to(MaterialChildCategoriesPage
+(subCategoryId: practiceQuizData.id.toString(),isSavedQuestions: isSavedQuestions??false,));
       },
       child: Container(
-        margin: EdgeInsets.symmetric(
-            vertical: 7.adaptSize, horizontal: 8.adaptSize),
-        padding: EdgeInsets.all(12.adaptSize),
-        decoration: UiHelper.gridCommonDecoration(index: index,context: context),
+        decoration: BoxDecoration(
+          color:
+          Color(hexStringToHexInt(color[index % 6])),
+          boxShadow: [
+            BoxShadow(
+                color: greyColor.withOpacity(0.4),
+                blurRadius: 2,
+                spreadRadius: 1,
+                offset: const Offset(1, 2)),
+          ],
+          borderRadius: BorderRadius.circular(6),
+        ),
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(8),
         child: ListTile(
-          leading: CustomSqureImageWidget(
-            imageUrl: practiceQuizData.image ?? MyConstant.banner_image,
-            size: 70.adaptSize,
-          ),
-          title: CommonTextViewWidget(
+          leading: Image.network(practiceQuizData.image??MyConstant.banner_image,width: 45,height: 45,),
+          title: RegularTextDarkMode(
             text: practiceQuizData.name!.length > 20
                 ? "${practiceQuizData.name!.substring(0, 18)}.."
-                : practiceQuizData.name!,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: colorSecondary,
+                : practiceQuizData.name!,maxLine: 2,color: primaryColor1,
           ),
-          subtitle: Column(
+          subtitle:const  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CommonTextViewWidgetDarkMode(
-                text: "English",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: colorGray,
-              ),
+            children:  [
+              Text("English",style: TextStyle(color: Colors.blue),),
             ],
           ),
-          trailing: Icon(
-            color: colorPrimary,
-            Icons.arrow_forward_ios,
-            size: 15.adaptSize,
-          ),
+          trailing: const Icon(Icons.arrow_forward_ios,size: 15,),
         ),
       ),
     );
   }
 
-  Widget _progressEmptyWidget(List list) {
+  Widget _progressEmptyWidget(isPaid, list) {
     return Center(
       child: _controller.isLoading.value
           ? const Loading()
-          : list.isEmpty && !_controller.isFirstLoadRunning.value
-              ? ShowLoadingPage(refreshIndicatorKey: _refreshKey)
-              : const SizedBox(),
+          : list.isEmpty &&
+          !_controller.isFirstLoadRunning.value
+          ? ShowLoadingPage(refreshIndicatorKey: _refreshKey)
+          : const SizedBox(),
     );
   }
 }

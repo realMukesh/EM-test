@@ -1,12 +1,11 @@
 import 'dart:io';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
-import '../../../widgets/common_textview_widget.dart';
-import '../../../widgets/loading.dart';
+import '../../../../resrc/widgets/loading.dart';
 import '../../../commonController/authenticationController.dart';
 import '../../../custom/toolbarTitle.dart';
 import '../../bottom_nav/controller/dashboard_controller.dart';
@@ -80,7 +79,7 @@ class MenuListView extends GetView<CustomMenuController> {
         switch(index){
           case 0:
             if (Platform.isAndroid) {
-              Get.toNamed(ChoosePlanDetails.routeName);
+              Get.to(() => const ChoosePlanDetails());
             } else {
               Get.to(() => InAppPlanDetail());
             }
@@ -99,7 +98,7 @@ class MenuListView extends GetView<CustomMenuController> {
       child: Container(
         margin: const EdgeInsets.all(3),
         decoration: const BoxDecoration(
-            color: colorPrimary,
+            color: primaryColor,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Center(
@@ -118,12 +117,14 @@ class MenuListView extends GetView<CustomMenuController> {
                 const SizedBox(
                   height: 6,
                 ),
-                CommonTextViewWidgetDarkMode(text:
+                Text(
                   controller.menuMenuList[index].title ?? "",
-                  align: TextAlign.center,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  style: const TextStyle(
                       fontFamily: "SourceSansPro",
                       fontSize: 13,
-                      color: white,
+                      color: white ),
                 )
               ],
             ),

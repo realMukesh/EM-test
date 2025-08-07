@@ -1,8 +1,8 @@
-import 'package:english_madhyam/src/widgets/loading.dart';
+import 'package:english_madhyam/resrc/widgets/loading.dart';
 import 'package:english_madhyam/src/screen/feed/controller/feed_controller.dart';
 import 'package:english_madhyam/src/screen/feed/page/cardSlider_widget.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -23,7 +23,6 @@ class _WordDayPageState extends State<WordDayPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: purpleColor.withOpacity(0.001),
       body: GetX<FeedController>(
         init: widget.controller,
@@ -47,7 +46,7 @@ class _WordDayPageState extends State<WordDayPage> {
               child: Lottie.asset('assets/animations/49993-search.json',
                   height: MediaQuery.of(context).size.height * 0.15),
             ),
-            CommonTextViewWidget(text: "No Words Today")
+            CustomDmSans(text: "No Words Today")
           ],
         );
       } else {

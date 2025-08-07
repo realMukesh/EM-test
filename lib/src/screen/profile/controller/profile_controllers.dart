@@ -1,50 +1,49 @@
 import 'package:english_madhyam/main.dart';
-import 'package:english_madhyam/src/screen/profile/model/profile_model.dart';
+import 'package:english_madhyam/resrc/models/model/profile_model/profile_model.dart';
 import 'package:get/get.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:english_madhyam/restApi/api_service.dart';
-
-import '../../../widgets/dialog/animated_dialog.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
 
 class ProfileControllers extends GetxController {
   var loading = true.obs;
   var updateLoading = true.obs;
-  Rx<ProfileModel> profileGet = ProfileModel().obs;
+  Rx<ProfileGet> profileGet = ProfileGet().obs;
+  var globalsubscription = "".obs;
 
-  var _globalSubscription = false.obs;
-  get isSubscriptionActive => _globalSubscription
-      .value; // It is mandatory initialize with one value from listType
+  // It is mandatory initialize with one value from listType
+  final selected = "Select city".obs;
+
+  void setSelected(String? value) {
+    selected.value = value!;
+  }
 
   @override
   void onInit() async {
     super.onInit();
-    getProfileData();
+    profileDataFetch();
   }
-
   // Profile data fetch editorial_controller
-  Future<void> getProfileData() async {
+  Future<bool?> profileDataFetch() async {
     try {
       loading(true);
-      ProfileModel? response = await apiService.profileGetApi();
+      var response = await apiService.profileGetApi();
       loading(false);
       if (response != null) {
         profileGet.value.user = response.user;
-        if (response.user!.isSubscription.toString() == "Y") {
-          _globalSubscription(true);
-        } else {
-          _globalSubscription(false);
-        }
+        globalsubscription.value = response.user!.isSubscription.toString();
+        return true;
       }
     } catch (e) {
       loading(false);
     }
   }
 
+
 // Refresh Profile
   void refreshList() async {
     try {
-      getProfileData();
+      profileDataFetch();
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
 
@@ -53,26 +52,27 @@ class ProfileControllers extends GetxController {
   }
 
   void updateProfile(
-      {String? name, String? image, String? email, String? userName}) async {
+      {String? name,
+      String? birthDay,
+      String? image,
+      String? state,
+      String? city,
+      String? email,
+      String? userName}) async {
     try {
       updateLoading(true);
       var updateProfile = await apiService.updateProfile(
-          name: name, image: image, emailId: email, username: userName);
-      if (updateProfile?.result == "success") {
-        await Get.dialog(
-            barrierDismissible: false,
-            CustomAnimatedDialogWidget(
-              title: "",
-              logo: "",
-              description: updateProfile?.message ?? "",
-              buttonAction: "okay".tr,
-              buttonCancel: "cancel".tr,
-              isHideCancelBtn: true,
-              onCancelTap: () {},
-              onActionTap: () async {
-                refreshList();
-              },
-            ));
+          name: name,
+          dateBirthday: birthDay,
+          image: image,
+          stateId: state,
+          emailId: email,
+          cityId: city,
+          username: userName);
+      if (updateProfile?.result=="success") {
+        Fluttertoast.showToast(msg: updateProfile?.message??"");
+        cancel();
+        refreshList();
       } else {
         Fluttertoast.showToast(msg: updateProfile!.message.toString());
         cancel();

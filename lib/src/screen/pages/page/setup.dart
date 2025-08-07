@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 
 

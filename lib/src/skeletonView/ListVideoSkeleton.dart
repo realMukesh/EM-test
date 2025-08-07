@@ -1,7 +1,9 @@
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:skeletons/skeletons.dart';
 
-import '../widgets/common_textview_widget.dart';
+import '../../resrc/widgets/boldTextView.dart';
 
 class ListVideoSkeleton extends StatelessWidget {
   const ListVideoSkeleton({Key? key}) : super(key: key);
@@ -34,7 +36,7 @@ class ListVideoSkeleton extends StatelessWidget {
                 const SizedBox(
                   height: 15,
                 ),
-                CommonTextViewWidget(text: ""),
+                BoldTextView(text: ""),
               ],
             ),
           )),

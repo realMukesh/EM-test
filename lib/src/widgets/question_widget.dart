@@ -1,9 +1,6 @@
-import 'package:english_madhyam/routes/my_constant.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
-import 'package:google_fonts/google_fonts.dart';
 class QuestionWidget extends StatefulWidget {
   final String questionString;
   const QuestionWidget({required this.questionString,Key?key});
@@ -17,19 +14,20 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   Widget build(BuildContext context) {
     return Material(
       child: Padding(
-          padding:  EdgeInsets.symmetric(vertical: 10.adaptSize),
+          padding: const EdgeInsets.all(10.0),
           child: SingleChildScrollView(
+
             child: Html(
               data: widget.questionString,
               // data: htmlString,
               extensions: const [TableHtmlExtension()],
               style: {
-                "body":Style(
-                  fontSize: FontSize(14.0,),fontFamily: GoogleFonts.poppins().fontFamily,
+                "body": Style(
+                  fontSize: FontSize(18.0),
                 ),
                 "table": Style(
                     height: Height.auto(),
-                    width: Width.auto(),fontFamily: GoogleFonts.poppins().fontFamily,
+                    width: Width.auto(),
                     backgroundColor: Colors.purple.withOpacity(0.1)
                 ),
                 // some other granular customizations are also possible
@@ -63,7 +61,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
                   height: Height.auto(),
                   width: Width.auto(),
                 ),
-                "p": Style(fontSize: FontSize(16.0,),fontFamily: GoogleFonts.poppins().fontFamily,)
+                "p": Style(fontSize: FontSize(18.0))
               },
             ),
           )),

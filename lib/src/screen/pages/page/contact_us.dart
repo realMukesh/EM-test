@@ -2,8 +2,8 @@ import 'package:english_madhyam/src/screen/pages/controller/cms_controller.dart'
 import 'package:english_madhyam/src/screen/pages/page/faq.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -89,11 +89,11 @@ class ContactUs extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  CommonTextViewWidget(text: "Contact Us",fontWeight: FontWeight.w700,fontSize: 36,),
+                  CustomDmSans(text: "Contact Us",fontWeight: FontWeight.w700,fontSize: 36,),
                   const SizedBox(
                     height: 10,
                   ),
-                  CommonTextViewWidget(text: "Please choose what types of support do you need and let us know.",fontSize: 16,color: Colors.grey,)
+                  CustomDmSans(text: "Please choose what types of support do you need and let us know.",fontSize: 16,color: Colors.grey,)
                   ,const SizedBox(
                     height: 20,
                   ),
@@ -155,11 +155,11 @@ class ContactUs extends StatelessWidget {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    CommonTextViewWidget(text: title[index], fontWeight: FontWeight.w500,fontSize: 14,),
+                                    CustomDmSans(text: title[index], fontWeight: FontWeight.w500,fontSize: 14,),
                                     const SizedBox(
                                       height: 10,
                                     ),
-                                    FittedBox(child: CommonTextViewWidget(text: index==3?     "+" + _cmsController.cmsData.value.cmsPages!.faqs!.length.toString() +" Answers"
+                                    FittedBox(child: CustomDmSans(text: index==3?     "+" + _cmsController.cmsData.value.cmsPages!.faqs!.length.toString() +" Answers"
                                         :index==2?_cmsController.cmsData.value.cmsPages!.cmsPages!.emailId!:subtitle[index],align: TextAlign.center, fontWeight: FontWeight.w500,fontSize: 12,color: Colors.grey,)),
 
                                   ],
@@ -173,7 +173,7 @@ class ContactUs extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextViewWidget(text: "Follow Us",fontSize: 15,fontWeight: FontWeight.w700),
+                  CustomDmSans(text: "Follow Us",fontSize: 15,fontWeight: FontWeight.w700),
                   const SizedBox(
                     height: 20,
                   ),

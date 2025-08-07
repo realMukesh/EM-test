@@ -1,15 +1,13 @@
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/regularTextViewDarkMode.dart';
-import 'package:english_madhyam/src/widgets/showLoadingPage.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/widgets/regularTextView.dart';
+import 'package:english_madhyam/resrc/widgets/showLoadingPage.dart';
 import 'package:english_madhyam/src/screen/leader_Board/controller/leaderboardController.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../utils/ui_helper.dart';
-import '../../../widgets/common_textview_widget.dart';
-import '../../../widgets/loading.dart';
+import '../../../../resrc/widgets/boldTextView.dart';
+import '../../../../resrc/widgets/loading.dart';
 import '../../../custom/toolbarTitle.dart';
 import '../model/LeadboardModel.dart';
 
@@ -45,7 +43,7 @@ class LeaderboardPage extends GetView<LeaderboardController> {
                         child: RefreshIndicator(
                       key: _refreshIndicatorKey,
                       color: Colors.white,
-                      backgroundColor: colorPrimary,
+                      backgroundColor: primaryColor,
                       strokeWidth: 4.0,
                       triggerMode: RefreshIndicatorTriggerMode.anywhere,
                       onRefresh: () async {
@@ -81,7 +79,7 @@ class LeaderboardPage extends GetView<LeaderboardController> {
 
   Widget buildListView(BuildContext context) {
     return Skeleton(
-        //themeMode: ThemeMode.light,
+        themeMode: ThemeMode.light,
         isLoading: controller.isFirstLoadRunning.value,
         skeleton: SkeletonListView(),
         child: ListView.separated(
@@ -98,40 +96,38 @@ class LeaderboardPage extends GetView<LeaderboardController> {
             Leadboard leadboard = controller.leaderBoardData[index];
 
             return Container(
-              margin: const EdgeInsets.only(left: 0, right: 0, top: 15, bottom: 0),
-              padding: const EdgeInsets.all(10),
-              decoration: UiHelper.pdfDecoration(context, index),
+              decoration: const BoxDecoration(
+                  color: homeColor,
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+              width: MediaQuery.of(context).size.width * 10,
               child: ListTile(
                 leading:
                     avtarBuild(shortName: '# ${leadboard.rank ?? ""}', url: ""),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CommonTextViewWidget(
+                    BoldTextView(
                       text: leadboard.name.toString().capitalize ?? "",
-                      color: accentColor,
+                      color: primaryColor1,
                     ),
-                    CommonTextViewWidget(
+                    RegularTextDarkMode(
                       text:
                           "Marks: ${leadboard.marks ?? ""}/${leadboard.totalMarks ?? ""}",
                     ),
                   ],
                 ),
-                trailing: SizedBox(
-                  width: 80.adaptSize,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+                trailing: Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: Column(
                     children: [
-                      const Icon(Icons.timer),
-                      const SizedBox(width: 12,),
-                      CommonTextViewWidget(
-                        text: leadboard.time.toString() ?? "",
+                      BoldTextView(
+                        text: "${leadboard.time.toString() ?? ""}",
                       ),
+                      RegularTextDarkMode(text: "Time"),
                     ],
                   ),
-                )
-
+                ),
               ),
             );
           },
@@ -144,22 +140,22 @@ class LeaderboardPage extends GetView<LeaderboardController> {
             fit: BoxFit
                 .fill, // the picture will acquire all of the parent space.
             child: SizedBox(
-                height: 70,
-                width: 70,
+                height: 40,
+                width: 40,
                 child: CircleAvatar(backgroundImage: NetworkImage(url))),
           )
         : Container(
-            height: 70,
-            width: 70,
+            height: 40,
+            width: 40,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: colorPrimary,
+              color: primaryColor1,
             ),
             child: Center(
-                child: CommonTextViewWidgetDarkMode(
+                child: BoldTextView(
               text: shortName,
               color: white,
-              align: TextAlign.center,
+              textAlign: TextAlign.center,
             )),
           );
   }

@@ -1,9 +1,9 @@
-import 'package:english_madhyam/src/screen/videos_screen/model/youtube_list.dart';
+import 'package:english_madhyam/resrc/models/model/youtube_list.dart';
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
 import 'package:english_madhyam/src/screen/videos_screen/controller/videoController.dart';
 import 'package:english_madhyam/src/screen/videos_screen/page/videoplayer.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -52,13 +52,13 @@ class _VideoListPageState extends State<VideoListPage> {
         padding: const EdgeInsets.all(18),
         children: [
           // searchBar(),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CommonTextViewWidget(
+              CustomDmSans(
                 text: "Recent",
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -69,7 +69,7 @@ class _VideoListPageState extends State<VideoListPage> {
               )
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Obx(
@@ -91,14 +91,14 @@ class _VideoListPageState extends State<VideoListPage> {
                       child: recentVideos(_videoController.videoList.value));
                 } else {
                   return Center(
-                      child: CommonTextViewWidget(
+                      child: CustomDmSans(
                     text: 'No Recents',
                   ));
                 }
               }
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Obx(() {
@@ -116,7 +116,7 @@ class _VideoListPageState extends State<VideoListPage> {
               if (_videoController.videoList.value.videos != null) {
                 return ListView.builder(
                     itemCount: _videoController.videoList.value.videos!.length,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
@@ -133,7 +133,7 @@ class _VideoListPageState extends State<VideoListPage> {
                           );
                         },
                         child: Container(
-                          margin: EdgeInsets.all(10),
+                          margin: const EdgeInsets.all(10),
 
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -146,7 +146,7 @@ class _VideoListPageState extends State<VideoListPage> {
                                     child: Container(
                                       height: 90,
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
+                                          borderRadius: const BorderRadius.all(
                                               Radius.circular(12)),
                                           color: Colors.red,
                                           image: DecorationImage(
@@ -156,7 +156,7 @@ class _VideoListPageState extends State<VideoListPage> {
                                       // child: Image.network(',scale: 1.2
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Expanded(
@@ -165,7 +165,7 @@ class _VideoListPageState extends State<VideoListPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        CommonTextViewWidget(
+                                        CustomDmSans(
                                           text: _videoController.videoList.value
                                               .videos![index].title
                                               .toString(),
@@ -175,7 +175,7 @@ class _VideoListPageState extends State<VideoListPage> {
                                           // maxlines: 1,
                                           // softwrap: true,
                                         ),
-                                        CommonTextViewWidget(
+                                        CustomDmSans(
                                           text: _videoController.videoList.value
                                               .videos![index].publishAtDate!,
                                           fontWeight: FontWeight.w500,
@@ -227,9 +227,9 @@ class _VideoListPageState extends State<VideoListPage> {
                 Flexible(
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.6,
-                    margin: EdgeInsets.all(6),
+                    margin: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
 
                       image: DecorationImage(
                           image: NetworkImage(thumbnailUrl),
@@ -264,18 +264,18 @@ class _VideoListPageState extends State<VideoListPage> {
                   ),
                 ),
                 Container(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     width: MediaQuery.of(context).size.width * 0.5,
-                    child: CommonTextViewWidget(
+                    child: CustomDmSans(
                       text: value.videos![index].title.toString(),
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
                       overflow: TextOverflow.ellipsis,
-                      maxLine: 1,
+                      maxLines: 1,
                     )),
                 Container(
                     padding: const EdgeInsets.only(left: 10),
-                    child: CommonTextViewWidget(
+                    child: CustomDmSans(
                       text: value.videos![index].publishAtDate.toString(),
                       fontWeight: FontWeight.w500,
                       fontSize: 13,
@@ -303,21 +303,21 @@ class _VideoListPageState extends State<VideoListPage> {
           ),
           decoration: InputDecoration(
             prefixIcon: Container(
-              padding: EdgeInsets.all(18),
+              padding: const EdgeInsets.all(18),
               child: SvgPicture.asset(
                 "assets/icons/search/search.svg",
               ),
             ),
             enabledBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
             hintStyle: const TextStyle(color: Colors.grey, height: 3),
             hintText: 'search by topic',
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: themeYellowColor)),
             filled: true,
-            fillColor: Color(0xffEDEDED).withOpacity(0.5),
-            border: OutlineInputBorder(
-              borderSide: const BorderSide(
+            fillColor: const Color(0xffEDEDED).withOpacity(0.5),
+            border: const OutlineInputBorder(
+              borderSide: BorderSide(
                 style: BorderStyle.solid,
                 color: Colors.white,
               ),

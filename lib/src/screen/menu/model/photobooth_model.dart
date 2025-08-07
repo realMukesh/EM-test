@@ -20,6 +20,7 @@ class PhotoboothModel {
     return data;
   }
 }
+
 class Head {
   bool? status;
   int? code;

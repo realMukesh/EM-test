@@ -1,5 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import '../../../utils/app_colors.dart';
+
 //to convert hexadecimal string into int
 hexStringToHexInt(String hex) {
   hex = hex.replaceFirst('#', '');
@@ -8,6 +10,33 @@ hexStringToHexInt(String hex) {
   return val;
 }
 
+final correctColor = Color(hexStringToHexInt('#0FEE25'));
+final gradientLigthblue = Color(hexStringToHexInt("#5BABEA"));
+final gradientBlue = Color(hexStringToHexInt("#1C68CF"));
+final whiteColor = Color(hexStringToHexInt("#FFFFFF"));
+final purpleColor = Color(hexStringToHexInt("#456AFD"));
+final bgPurpleColor = Color(hexStringToHexInt("#EDF1FF"));
+final purplegrColor = Color(hexStringToHexInt("#0033FD"));
+final blackColor = Color(hexStringToHexInt("#000000"));
+final authGreyColor = Color(hexStringToHexInt("#F9F9F9"));
+final greenColor = Color(hexStringToHexInt("#1AA200"));
+final themeYellowColor = Color(hexStringToHexInt("#FFBE00"));
+final themePurpleColor = Color(hexStringToHexInt("#476CFF"));
+final magenttaColor = Color(hexStringToHexInt("#712182"));
+final seaGreenColor = Color(hexStringToHexInt("#3B909B"));
+final brownColor = Color(hexStringToHexInt("#DE822D"));
+final lightYellowColor = Color(hexStringToHexInt("#FFD969"));
+final indigoColor = Color(hexStringToHexInt("#345EE5"));
+final darkGreyColor = Color(hexStringToHexInt("#5C5C5C"));
+final lightGreyColor = Color(hexStringToHexInt("#EAECEF"));
+final pinkColor = Color(hexStringToHexInt("#E33858"));
+final greyColor = Color(hexStringToHexInt("#949494"));
+const indicatorColor = Color(0xffBABABA);
+
+final darkGreenColor = Color(hexStringToHexInt("#148835"));
+final lightGreenColor = Color(hexStringToHexInt("#65CE93"));
+final lightPurpleColor = Color(hexStringToHexInt("#5D5BF5"));
+final redColor = Color(hexStringToHexInt("#CA0B09"));
 final Shader linearGradient = LinearGradient(
   stops: <double>[0.0, 1.0],
   tileMode: TileMode.mirror,

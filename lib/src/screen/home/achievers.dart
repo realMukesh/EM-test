@@ -1,14 +1,12 @@
-import 'package:english_madhyam/routes/my_constant.dart';
-import 'package:english_madhyam/src/screen/home/model/home_model/home_model.dart';
-import 'package:english_madhyam/src/screen/pages/page/setup.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
-import 'package:english_madhyam/utils/ui_helper.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/models/model/home_model/home_model.dart';
+import 'package:english_madhyam/resrc/utils/ui_helper.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import '../../widgets/common_textview_widget.dart';
+import '../../custom/semiBoldTextView.dart';
 
 class Achieverstake extends StatefulWidget {
   final List<Achievers> achievers;
@@ -24,24 +22,19 @@ class _AchieverstakeState extends State<Achieverstake> {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.55.adaptSize,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-            //color: Colors.white70,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                  color: purpleColor.withOpacity(0.13),
-                  offset: const Offset(0, 4),
-                  blurRadius: 1,
-                  spreadRadius: 2)
-            ]),
-        child: achieverSlider(context),
-      ),
-      // child: achieverSlider(context),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.55,
+      decoration: BoxDecoration(
+          //color: Colors.white70,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+                color: greyColor.withOpacity(0.5),
+                offset: const Offset(0, 4),
+                blurRadius: 1,
+                spreadRadius: 2)
+          ]),
+      child: achieverSlider(context),
     );
   }
 
@@ -52,12 +45,8 @@ class _AchieverstakeState extends State<Achieverstake> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CommonTextViewWidget(
-                  text: "Our Achievers Take",
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: primaryColor,
-                ),
+                SemiBoldTextView(text: "Our Achievers Take",textSize: 22,
+                  weight: FontWeight.w700,),
                 const SizedBox(
                   height: 15,
                 ),
@@ -75,40 +64,31 @@ class _AchieverstakeState extends State<Achieverstake> {
                   height: 15,
                 ),
                 Flexible(
-                  child: CommonTextViewWidget(
-                    text: (item.userName).toString(),
-                    fontSize: 18,
-                    align: TextAlign.center,
-                    fontWeight: FontWeight.w600,
+                  child: SemiBoldTextView(text:
+                    (item.userName).toString(),textSize: 18,
+                    textAlign: TextAlign.center,weight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
                 Flexible(
-                  child: CommonTextViewWidget(
-                    text:
-                        item.exam_name == null ? "" : item.exam_name.toString(),
-                    fontSize: 18,
-                    align: TextAlign.center,
-                    fontWeight: FontWeight.w500,
+                  child:SemiBoldTextView(text:
+                  item.exam_name == null ? "" : item.exam_name.toString(),textSize: 18,
+                    textAlign: TextAlign.center,weight: FontWeight.w600,
                   ),
                 ),
                 Divider(
                   color: greyColor,
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: (){
                     UiHelper.showINfoDialog(item.description ?? "");
                   },
                   child: Html(
-                    data: item.description ?? "",
-                    style: {
-                      "p": Style(
-                          fontSize: FontSize(14.fSize),
-                          textAlign: TextAlign.justify,
-                          maxLines: 5,fontFamily: MyConstant.currentFont)
-                    },
+                    data: item.description ?? "",style: {
+                    "p": Style(fontSize: FontSize(14.0),textAlign: TextAlign.justify,maxLines: 5)
+                  },
                   ),
                 )
               ],

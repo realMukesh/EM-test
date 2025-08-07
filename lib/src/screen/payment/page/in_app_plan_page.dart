@@ -10,7 +10,7 @@ class InAppPlanDetail extends StatelessWidget {
 
 import 'dart:async';
 import 'dart:io';
-import 'package:english_madhyam/utils/ui_helper.dart';
+import 'package:english_madhyam/resrc/utils/ui_helper.dart';
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +20,6 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'package:in_app_purchase_storekit/store_kit_wrappers.dart';
 import '../../../utils/colors/colors.dart';
-import '../../../widgets/common_textview_widget.dart';
 import '../../material/controller/materialController.dart';
 import '../../profile/controller/profile_controllers.dart';
 import '../controller/paymentController.dart';
@@ -30,10 +29,12 @@ import 'consumable_store.dart';
 // To try without auto-consume on another platform, change `true` to `false` here.
 final bool _kAutoConsume = Platform.isIOS || true;
 
+
 const String one_month_english = 'com.EngMadhyam.englishMadhyam.onemonthplan';
 const String three_month_english = 'com.EngMadhyam.englishMadhyam.threemonthplan';
 const String twelv_month_english = 'com.EngMadhyam.englishMadhyam.twelvemonthplan';
 const String six_month_english = 'com.EngMadhyam.englishMadhyam.sixmonthplan';
+final PaymentController _paymentController = Get.put(PaymentController());
 
 const List<String> _kProductIds = <String>[
   one_month_english,
@@ -45,20 +46,19 @@ const List<String> _kProductIds = <String>[
 class InAppPlanDetail extends StatefulWidget {
   @override
   State<InAppPlanDetail> createState() => _InAppPlanDetailState();
-
 }
 
 class _InAppPlanDetailState extends State<InAppPlanDetail> {
-  final PaymentController _paymentController = Get.put(PaymentController());
-
   final InAppPurchase _inAppPurchase = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
   List<String> _notFoundIds = <String>[];
   List<ProductDetails> _products = <ProductDetails>[];
   List<PurchaseDetails> _purchases = <PurchaseDetails>[];
   final ProfileControllers _profileControllers = Get.put(ProfileControllers());
-  final PaymentController planDetailsController =
-  Get.put<PaymentController>(PaymentController());
+  final MaterialController planDetailsController =
+  Get.put<MaterialController>(MaterialController());
+
+
 
   List<String> _consumables = <String>[];
 
@@ -169,7 +169,7 @@ class _InAppPlanDetailState extends State<InAppPlanDetail> {
     var dataResponse = await _paymentController.confirmPayment(
         pay: transactionIdentifier ?? "",
         amount: selectedPrice,
-        planID: purchaseDetails.productID == _kProductIds[0]
+        PlanID: purchaseDetails.productID == _kProductIds[0]
             ? planDetailsController.planIdOneMonth
             : purchaseDetails.productID == _kProductIds[1]
             ? planDetailsController.planIdThreeMonth
@@ -183,7 +183,7 @@ class _InAppPlanDetailState extends State<InAppPlanDetail> {
     if (dataResponse?.result == true) {
       UiHelper.showSnakbarSucess(
           context, "You have Successfully purchased Subscription");
-      await _profileControllers.getProfileData();
+      await _profileControllers.profileDataFetch();
       Get.back();
     } else {
       UiHelper.showSnakbarMsg(context, dataResponse?.message ?? "");
@@ -205,7 +205,7 @@ class _InAppPlanDetailState extends State<InAppPlanDetail> {
       );
     } else {
       stack.add(Center(
-        child: CommonTextViewWidget(text:_queryProductError!),
+        child: Text(_queryProductError!),
       ));
     }
     if (_purchasePending) {
@@ -241,15 +241,15 @@ class _InAppPlanDetailState extends State<InAppPlanDetail> {
 
   Card _buildProductList() {
     if (_loading) {
-      return  Card(
+      return const Card(
           child: ListTile(
               leading: CircularProgressIndicator(),
-              title: CommonTextViewWidget(text:'Fetching Plan...')));
+              title: Text('Fetching Plan...')));
     }
     if (!_isAvailable) {
       return const Card();
     }
-     ListTile productHeader = ListTile(title: CommonTextViewWidget(text:'Select plan'));
+    const ListTile productHeader = ListTile(title: Text('Select plan'));
     final List<Container> productList = <Container>[];
     if (_notFoundIds.isNotEmpty) {
       productList.add(Container(
@@ -268,9 +268,9 @@ class _InAppPlanDetailState extends State<InAppPlanDetail> {
                 end: Alignment.bottomCenter,
                 stops: [0, 2])),
         child: ListTile(
-            title: CommonTextViewWidget(text: '[${_notFoundIds.join(", ")}] not found',
-                color: ThemeData.light().colorScheme.error),
-            subtitle:  CommonTextViewWidget(text:
+            title: Text('[${_notFoundIds.join(", ")}] not found',
+                style: TextStyle(color: ThemeData.light().colorScheme.error)),
+            subtitle: const Text(
                 'This app needs special configuration to run. Please see example/README.md for instructions.')),
       ));
     }
@@ -299,10 +299,10 @@ class _InAppPlanDetailState extends State<InAppPlanDetail> {
             borderRadius: BorderRadius.circular(18),
           ),
           child: ListTile(
-            title: CommonTextViewWidget(text:
+            title: Text(
               productDetails.title,
             ),
-            subtitle: CommonTextViewWidget(text:
+            subtitle: Text(
               productDetails.description,
             ),
             trailing: TextButton(
@@ -326,7 +326,7 @@ class _InAppPlanDetailState extends State<InAppPlanDetail> {
                   _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
                 }
               },
-              child: CommonTextViewWidget(text:productDetails.price),
+              child: Text(productDetails.price),
             ),
           ),
         );

@@ -4,8 +4,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../../widgets/common_textview_widget.dart';
-
 class SettingPage extends StatelessWidget {
   final AuthenticationManager authManger =
       Get.put(AuthenticationManager());
@@ -15,7 +13,7 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  CommonTextViewWidget(text:'Dark Mode Settings'),
+        title: const Text('Dark Mode Settings'),
       ),
       body: Center(
         child: Column(
@@ -25,7 +23,7 @@ class SettingPage extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                 CommonTextViewWidget(text: 'Light'),
+                const Text('Light'),
                 const SizedBox(width: 10),
                 Switch(
                   value: AdaptiveTheme.of(context).mode.isDark,
@@ -40,7 +38,7 @@ class SettingPage extends StatelessWidget {
                   },
                 ),
                 const SizedBox(width: 10),
-                 CommonTextViewWidget(text: 'Dark'),
+                const Text('Dark'),
               ],
             ),
           ],

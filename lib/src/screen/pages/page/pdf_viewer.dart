@@ -1,5 +1,5 @@
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';

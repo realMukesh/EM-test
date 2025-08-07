@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:get/get.dart';
-import '../login/page/login_page.dart';
+import '../../auth/login/login_page.dart';
 import '../../commonController/authenticationController.dart';
 import '../bottom_nav/dashboard_page.dart';
 class SplashController extends GetxController {
@@ -21,7 +21,7 @@ class SplashController extends GetxController {
     await initialCall();
     Future.delayed(const Duration(seconds: 3), () {
       if (controller!.isLogin()) {
-        Get.offNamedUntil(DashboardPage.routeName, (route) => false);
+        Get.offAndToNamed(DashboardPage.routeName);
       } else {
         Get.offAndToNamed(LoginPage.routeName);
       }

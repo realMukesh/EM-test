@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../../widgets/common_textview_widget.dart';
+import '../pages/page/custom_dmsans.dart';
 
 class NoNetwork extends StatefulWidget {
   const NoNetwork({Key? key}) : super(key: key);
@@ -21,8 +21,8 @@ class _NoNetworkState extends State<NoNetwork> {
         Center(
           child: Column(
             children: [
-              CommonTextViewWidget(text: "No Network Connection",fontWeight: FontWeight.w600,fontSize: 18,),
-              OutlinedButton(onPressed: (){}, child: CommonTextViewWidget(text: "Retry",))
+              CustomDmSans(text: "No Network Connection",fontWeight: FontWeight.w600,fontSize: 18,),
+              OutlinedButton(onPressed: (){}, child: CustomDmSans(text: "Retry",))
             ],
           ),
         )

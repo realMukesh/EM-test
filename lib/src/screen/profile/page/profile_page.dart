@@ -1,23 +1,23 @@
 import 'dart:io';
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:english_madhyam/src/commonController/authenticationController.dart';
-import '../../../widgets/rounded_button.dart';
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
+import 'package:english_madhyam/src/utils/custom_roboto/custom_roboto.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:english_madhyam/src/screen/profile/controller/profile_controllers.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:lottie/lottie.dart';
+import 'package:intl/intl.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -32,12 +32,17 @@ class _ProfilePageState extends State<ProfilePage> {
   final AuthenticationManager _authenticationController = Get.find();
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  var dropdownvalueCity;
+  var dropdownvalueState;
+  bool state = false;
+  bool city = false;
   bool isLoading = false;
   bool loader = false;
   final ImagePicker _picker = ImagePicker();
   XFile pickedFileProfile = XFile("");
   String imageUrl = "";
-  String profilePath = "";
+  String Path = "";
+  String path = "";
 
   FetchUserData() {
     setState(() {
@@ -45,6 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
           _profileControllers.profileGet.value.user!.name.toString();
       phone.text = _profileControllers.profileGet.value.user!.phone.toString();
       email.text = _profileControllers.profileGet.value.user!.email.toString();
+      dob.text =
+          _profileControllers.profileGet.value.user!.dateOfBirth.toString();
     });
   }
 
@@ -72,10 +79,12 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: whiteColor,
       appBar: AppBar(
         centerTitle: false,
         elevation: 0.0,
-        title: const ToolbarTitle(
+        //backgroundColor: whiteColor,
+        title: ToolbarTitle(
           title: "Edit Profile",
         ),
         actions: [
@@ -86,20 +95,17 @@ class _ProfilePageState extends State<ProfilePage> {
               });
             },
             child: Container(
-              width: 100.adaptSize,
               margin: const EdgeInsets.all(10),
               padding:
-                  const EdgeInsets.only(left: 14, right: 12, top: 0, bottom: 0),
+                  const EdgeInsets.only(left: 14, right: 12, top: 7, bottom: 0),
               decoration: BoxDecoration(
                 color: edit == true ? greyColor : greenColor,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Center(
-                child: CommonTextViewWidget(
-                  text: edit == true ? "Cancel" : "Edit",
-                  color: whiteColor,
-                  fontSize: 15,
-                ),
+              child: CustomDmSans(
+                text: edit == true ? "Cancel" : "Edit",
+                color: whiteColor,
+                fontSize: 15,
               ),
             ),
           )
@@ -122,8 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             } else {
               return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                padding: const EdgeInsets.only(left: 25.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -141,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 loader == true
                                     ? const CircularProgressIndicator()
-                                    : profilePath == ""
+                                    : Path == ""
                                         ? CircleAvatar(
                                             backgroundImage: NetworkImage(
                                                 _profileControllers.profileGet
@@ -173,6 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             )),
                       ),
                     ),
+
                     Stack(
                       alignment: Alignment.topCenter,
                       children: [
@@ -180,12 +186,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           padding: const EdgeInsets.only(top: 10.0, left: 10),
                           child: Column(
                             children: [
-                              CommonTextViewWidget(
+                              CustomDmSans(
                                 text: _profileControllers
                                     .profileGet.value.user!.name
                                     .toString(),
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
                               const SizedBox(
                                 height: 2,
@@ -193,13 +199,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               _profileControllers
                                           .profileGet.value.user!.email !=
                                       null
-                                  ? CommonTextViewWidget(
+                                  ? CustomDmSans(
                                       text: (_profileControllers
                                               .profileGet.value.user!.email)
                                           .toString(),
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: colorGray,
                                     )
                                   : const Text(""),
                             ],
@@ -221,70 +225,125 @@ class _ProfilePageState extends State<ProfilePage> {
                       enabled: edit,
                       readOnly: !edit,
                       controller: userName,
+                      //style: GoogleFonts.roboto(color: blackColor),
                       decoration: InputDecoration(
                           labelText: "Username",
                           enabled: false,
                           border: InputBorder.none,
                           labelStyle: GoogleFonts.roboto(
-                              color: colorGray, fontSize: 12.fSize)),
+                              color: Colors.grey.shade400, fontSize: 13)),
                     ),
                     TextFormField(
                       enabled: false,
                       readOnly: true,
                       controller: phone,
+                      //style: GoogleFonts.roboto(color: blackColor),
                       decoration: InputDecoration(
                           prefixText: "+91  ",
+                          /*prefixStyle:
+                              GoogleFonts.dmSans(color: blackColor, fontSize: 16),*/
                           labelText: "Phone Number",
                           enabled: false,
                           border: InputBorder.none,
                           labelStyle: GoogleFonts.roboto(
-                              color: colorGray, fontSize: 12.fSize)),
+                              color: Colors.grey.shade400, fontSize: 13)),
                     ),
                     TextFormField(
                       enabled: edit,
                       readOnly: !edit,
                       controller: email,
+                      //style: GoogleFonts.roboto(color: blackColor),
                       decoration: InputDecoration(
                           labelText: "Enter Email Address ",
                           enabled: false,
                           border: InputBorder.none,
                           labelStyle: GoogleFonts.roboto(
-                              color: colorGray, fontSize: 12.fSize)),
+                              color: Colors.grey.shade400, fontSize: 13)),
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    _profileControllers.isSubscriptionActive
+                    const Divider(),
+                    _profileControllers.profileGet.value.user!.isSubscription !=
+                            "N"
                         ? subsDetails()
                         : const Text(""),
                     const SizedBox(
                       height: 20,
                     ),
-                    Visibility(
-                      visible: edit,
-                      child: Center(
-                        child: RoundedButton(
-                          text: "Update",
-                          press: () {
-                            {
-                              try {
-                                _profileControllers.updateProfile(
-                                  name: userName.text.trim(),
-                                  image: profilePath == "" ? null : profilePath,
-                                  email: email.text == ""
-                                      ? _profileControllers
-                                          .profileGet.value.user!.email
-                                      : email.text,
-                                  userName: userName.text.trim(),
-                                );
-                              } catch (e) {
-                                Fluttertoast.showToast(msg: e.toString());
-                              }
-                            }
-                          },
+                    InkWell(
+                      onTap: () {
+                        try {
+                          _profileControllers.updateProfile(
+                            name: userName.text.trim(),
+                            city: dropdownvalueCity.toString() != "null"
+                                ? dropdownvalueCity
+                                : _profileControllers
+                                    .profileGet.value.user!.cityId
+                                    .toString(),
+                            state: dropdownvalueState.toString() != "null"
+                                ? dropdownvalueState
+                                : _profileControllers
+                                    .profileGet.value.user!.stateId
+                                    .toString(),
+                            image: Path == "" ? null : Path,
+                            birthDay: "",
+                            email: email.text == ""
+                                ? _profileControllers
+                                    .profileGet.value.user!.email
+                                : email.text,
+                            userName: userName.text.trim(),
+                          );
+                        } catch (e) {
+                          Fluttertoast.showToast(msg: e.toString());
+                        }
+                        setState(() {
+                          edit = false;
+                          state = false;
+                          city = false;
+                        });
+                      },
+                      child: Visibility(
+                        visible: edit,
+                        child: Center(
+                          child: Container(
+                            // margin: const EdgeInsets.only(bottom: 40, top: 20),
+                            padding: const EdgeInsets.only(
+                                left: 30, right: 30, top: 10, bottom: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border:
+                                  Border.all(color: purplegrColor, width: 2),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: greyColor,
+                                    blurRadius: 2,
+                                    spreadRadius: 1,
+                                    offset: const Offset(1, 2))
+                              ],
+                              gradient: RadialGradient(
+                                center: const Alignment(0.0, 0.0),
+                                colors: [purpleColor, purplegrColor],
+                                radius: 3.0,
+                              ),
+                            ),
+                            child: Text(
+                              'Update',
+                              style: GoogleFonts.roboto(
+                                  color: whiteColor,
+                                  decoration: TextDecoration.none,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  shadows: [
+                                    Shadow(
+                                      offset: const Offset(1.0, 4),
+                                      blurRadius: 3.0,
+                                      color: greyColor.withOpacity(0.5),
+                                    ),
+                                  ]),
+                            ),
+                          ),
                         ),
                       ),
                     ),
+                    // :Text(""),
                     const SizedBox(
                       height: 30,
                     )
@@ -319,7 +378,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     setState(() {
       pickedFileProfile = pickedFile;
-      profilePath = result!.path;
+      Path = result!.path;
       loader = false;
     });
   }
@@ -334,9 +393,9 @@ class _ProfilePageState extends State<ProfilePage> {
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               children: [
-                CommonTextViewWidget(
-                  text: "Choose photo",
-                  fontSize: 20.0,
+                const Text(
+                  "Choose photo",
+                  style: TextStyle(fontSize: 20.0),
                 ),
                 const SizedBox(
                   height: 20,
@@ -350,9 +409,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         getImage1(ImageSource.camera, "photo");
                         Navigator.pop(context);
                       },
-                      label: CommonTextViewWidget(
-                        text: "Camera",
-                        color: Colors.black,
+                      label: const Text(
+                        "Camera",
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     TextButton.icon(
@@ -361,9 +420,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         getImage1(ImageSource.gallery, "photo");
                         Navigator.pop(context);
                       },
-                      label: CommonTextViewWidget(
-                        text: "Gallery",
-                        color: Colors.black,
+                      label: const Text(
+                        "Gallery",
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ],
@@ -375,70 +434,55 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget subsDetails() {
-    return Container(
-      padding: EdgeInsets.only(left: 14.h, right: 14.h, top: 12, bottom: 12),
-      decoration: BoxDecoration(
-          color: AdaptiveTheme.of(context).mode.isDark
-              ? Colors.transparent
-              : colorLightGray,
-          borderRadius: BorderRadius.all(Radius.circular(15))),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 10,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          "Material Purchase Detail",
+          style: GoogleFonts.roboto(fontWeight: FontWeight.w500),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 14),
+          child: Text(
+            "Start From : ${_profileControllers.profileGet.value.user!.subscriptionDetails!.startDate!} ",
+            style: GoogleFonts.roboto(fontWeight: FontWeight.w500),
           ),
-          CommonTextViewWidget(
-            text: "Material Purchase Detail",
-            fontWeight: FontWeight.w500,
-            fontSize: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 14),
+          child: Text(
+            "End On : ${_profileControllers.profileGet.value.user!.subscriptionDetails!.endDate!} ",
+            style: GoogleFonts.roboto(fontWeight: FontWeight.w500),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 14),
-            child: CommonTextViewWidget(
-              text:
-                  "Start From : ${_profileControllers.profileGet.value.user?.subscriptionDetails?.startDate ?? ""} ",
-              fontWeight: FontWeight.w500,
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0, top: 14),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Validity ${_profileControllers.profileGet.value.user!.subscriptionDetails!.planDuration!} Months",
+                style: GoogleFonts.roboto(fontWeight: FontWeight.w500),
+              ),
+              Text(
+                "₹ ${_profileControllers.profileGet.value.user!.subscriptionDetails!.fee!}",
+                style: GoogleFonts.roboto(fontWeight: FontWeight.w500),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 14),
-            child: CommonTextViewWidget(
-              text:
-                  "End On : ${_profileControllers.profileGet.value.user?.subscriptionDetails?.endDate ?? ""} ",
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0, top: 14),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CommonTextViewWidget(
-                  text:
-                      "Validity ${_profileControllers.profileGet.value.user?.subscriptionDetails?.planDuration ?? ""} Months",
-                  fontWeight: FontWeight.w500,
-                ),
-                CommonTextViewWidget(
-                  text:
-                      "₹ ${_profileControllers.profileGet.value.user?.subscriptionDetails?.fee ?? ""}",
-                  fontWeight: FontWeight.w500,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 18,
-          ),
-          CommonTextViewWidget(
-            text:
-                "${_profileControllers.profileGet.value.user?.subscriptionDetails?.daysLeft ?? ""}Days left",
-            color: greenColor,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(
+          height: 18,
+        ),
+        Text(
+          "${_profileControllers.profileGet.value.user!.subscriptionDetails!.daysLeft}Days left",
+          style: GoogleFonts.roboto(
+              color: greenColor, fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+      ],
     );
   }
 

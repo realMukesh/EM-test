@@ -94,9 +94,13 @@ dependencies:
   cached_network_image: any
   skeletons:
     path: packages/skeletons-master
+
+
+
+
   #card_swiper:
     #path: packages/card_swiper
-  youtube_player_flutter: any
+  #youtube_player_flutter: ^9.0.4
 #    path: packages/youtube_player_flutter
   just_audio:
   pinput: ^5.0.0

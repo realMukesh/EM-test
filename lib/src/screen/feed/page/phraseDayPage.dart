@@ -1,13 +1,13 @@
 import 'package:english_madhyam/src/screen/feed/controller/feed_controller.dart';
 import 'package:english_madhyam/src/screen/feed/page/cardSlider_widget.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import '../../../widgets/loading.dart';
-import '../feed_bindings/feed_bind.dart';
+import '../../../../resrc/widgets/loading.dart';
+import '../../../../resrc/helper/bindings/feed_bindings/feed_bind.dart';
 import '../../pages/page/converter.dart';
 
 class PhraseDayPge extends StatefulWidget {
@@ -48,7 +48,7 @@ class _PhraseDayPgeState extends State<PhraseDayPge> {
               child: Lottie.asset('assets/animations/49993-search.json',
                   height: MediaQuery.of(context).size.height * 0.15),
             ),
-            CommonTextViewWidget(text: "No Phrase Today")
+            CustomDmSans(text: "No Phrase Today")
           ],
         );
       } else {

@@ -1,40 +1,46 @@
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/loading.dart';
-import 'package:english_madhyam/src/widgets/showLoadingPage.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/widgets/loading.dart';
+import 'package:english_madhyam/resrc/widgets/showLoadingPage.dart';
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
 import 'package:english_madhyam/src/screen/favorite/controller/attemptedExamController.dart';
 import 'package:english_madhyam/src/screen/favorite/model/attemptedExamData.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:english_madhyam/src/widgets/regularTextViewDarkMode.dart';
+import '../../../../resrc/widgets/boldTextView.dart';
+import 'package:english_madhyam/resrc/widgets/regularTextView.dart';
 import 'package:english_madhyam/src/screen/practice/controller/praticeController.dart';
-import 'package:english_madhyam/src/screen/practice/page/practiceExamPage.dart';
+import 'package:english_madhyam/src/screen/practice/page/practiceExamListlPage.dart';
 import 'package:skeletons/skeletons.dart';
-import '../../../../utils/ui_helper.dart';
-import '../../../skeletonView/examSkeletonList.dart';
+import '../../../../resrc/utils/ui_helper.dart';
+import '../../../skeletonView/agendaSkeletonList.dart';
 import '../../../utils/progress_bar_report/progress_bar.dart';
-import '../../../widgets/common_textview_widget.dart';
-import '../../exam/controller/examListController.dart';
-import '../../practice/widget/performance_report.dart';
+import '../../practice/controller/praticeExamListController.dart';
+import '../../practice/performance_report.dart';
 
-class AttemptedExamList extends StatefulWidget {
-  const AttemptedExamList({Key? key}) : super(key: key);
+class AttemptedExampList extends StatefulWidget {
+  const AttemptedExampList({Key? key}) : super(key: key);
 
   @override
-  State<AttemptedExamList> createState() => _AttemptedExamListState();
+  State<AttemptedExampList> createState() => _AttemptedExampListState();
 }
 
-class _AttemptedExamListState extends State<AttemptedExamList> {
+class _AttemptedExampListState extends State<AttemptedExampList> {
   final AttemptedExamController _controller =
       Get.put(AttemptedExamController());
 
-  final ExamListController _praticeExamListController =
-      Get.put(ExamListController());
+  final PraticeExamListController _praticeExamListController =
+      Get.put(PraticeExamListController());
 
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
 
+  List<String> color = [
+    "#EDF6FF",
+    "#FFDDDD",
+    "#F6F4FF",
+    "#EBFFE5",
+  ];
   @override
   void initState() {
     super.initState();
@@ -81,10 +87,11 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
                 );
               },
               child: Skeleton(
+                themeMode: ThemeMode.light,
                 isLoading: _controller.isFirstLoadRunning.value,
                 skeleton: const ListAgendaSkeleton(),
                 child: ListView.builder(
-                    controller: _controller.preScrollController,
+                  controller: _controller.preScrollController,
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: _controller.previousExamList.length,
                     itemBuilder: (BuildContext ctx, int index) {
@@ -102,7 +109,10 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
     return Container(
       margin: const EdgeInsets.only(left: 0, right: 0, top: 15, bottom: 0),
       padding: const EdgeInsets.all(10),
-      decoration: UiHelper.pdfDecoration(context, index % 6),
+      decoration: BoxDecoration(
+        color: homeColor,
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -124,19 +134,19 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
                 const SizedBox(
                   width: 6,
                 ),
-                CommonTextViewWidget(
+                RegularTextDarkMode(
                   text: examData.categoryDetails?.name ?? "",
-                  color: colorSecondary,
-                  fontSize: 12,
-                  align: TextAlign.start,
+                  color: labelColor,
+                  textSize: 12,
+                  textAlign: TextAlign.start,
                 )
               ],
             ),
-            subtitle: CommonTextViewWidget(
+            subtitle: BoldTextView(
               text: examData.examDetails?.title ?? "",
-              color: colorSecondary,
-              fontSize: 16,
-              align: TextAlign.start,
+              color: labelColor,
+              textSize: 16,
+              textAlign: TextAlign.start,
             ),
           ),
           attemptedWidget(examData, context)
@@ -151,10 +161,10 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(3)),
           color: Colors.blue),
-      child: CommonTextViewWidget(
+      child: const RegularTextDarkMode(
         text: "FREE",
         color: white,
-        fontSize: 12,
+        textSize: 12,
       ),
     );
   }
@@ -165,10 +175,10 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(3)),
           color: Colors.green),
-      child: CommonTextViewWidget(
+      child: const RegularTextDarkMode(
         text: "PAID",
         color: white,
-        fontSize: 12,
+        textSize: 12,
       ),
     );
   }
@@ -183,25 +193,34 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CommonTextViewWidget(
+                RegularTextDarkMode(
                   text:
                       "${data?.marks.toString()}/${data?.totalMarks.toString()} Score",
-                  color: colorSecondary,
+                  color: labelColor,
                 ),
                 TextButton(
                     onPressed: () {
                       openExamDetailPage(data);
                     },
-                    child: CommonTextViewWidget(
-                      text: "View Result",
-                      color: Colors.blue,
+                    child: const BoldTextView(
+                      text: "View Result",color: Colors.blue,
                     ))
               ],
             ),
             const SizedBox(
               height: 6,
             ),
-            progressWidget(data, contxt),
+            SizedBox(
+              height: 10,
+              width: contxt.width * .85,
+              child: ProgressBar(
+                  redSize: double.parse(
+                      (data!.incorrectQuestion! / data.totalQuestion!)
+                          .toString()),
+                  greenSize: double.parse(
+                      (data!.correctQuestion! / data.totalQuestion!)
+                          .toString())),
+            ),
             const SizedBox(
               height: 6,
             ),
@@ -214,14 +233,13 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
                           name: data.categoryDetails?.name ?? "",
                           id: data.categoryDetails?.id);
                     },
-                    child: CommonTextViewWidget(
-                      text: "More test",
-                      color: Colors.blue,
+                    child: const BoldTextView(
+                      text: "More test",color: Colors.blue,
                     )),
-                CommonTextViewWidget(
+                RegularTextDarkMode(
                   text:
                       "Attempted on ${UiHelper.getFormattedChatDate(date: data.createdAt)}",
-                  fontSize: 14,
+                  textSize: 14,
                 ),
               ],
             )
@@ -229,39 +247,11 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
         ));
   }
 
-  Widget progressWidget(ExamParent data, BuildContext contxt) {
-    int incorrectQuestion = data.incorrectQuestion ?? 0;
-
-    int correctQuestion = data.correctQuestion ?? 0;
-
-    int totalQuestion = data.totalQuestion ?? 0;
-
-    double redSize =
-        double.parse((incorrectQuestion / totalQuestion).toString());
-    double greenSize =
-        double.parse((correctQuestion / totalQuestion).toString());
-
-    if (redSize.toString() == "NaN") {
-      redSize = 0.0;
-    }
-    if (greenSize.toString() == "NaN") {
-      greenSize = 0.0;
-    }
-
-    return SizedBox(
-      height: 10,
-      width: contxt.width * .85,
-      child: ProgressBar(
-          redSize: redSize,
-          greenSize: greenSize),
-    );
-  }
-
   openDetailPage({name, id}) {
-    _praticeExamListController.getExamListByCategory(
-        cat: id.toString(), isRefresh: false, saveQuestionExamList: false);
+    _praticeExamListController.getQuizListByCategory(
+        cat: id.toString(), isRefresh: false,saveQuestionExamList: false);
     Get.to(
-      () => PracticeExamListPage(
+      () => PracticeExamListDetailPage(
         title: name,
         id: id.toString(),
         saveQuestion: false,
@@ -281,11 +271,13 @@ class _AttemptedExamListState extends State<AttemptedExamList> {
   }
 
   openExamDetailPage(ExamParent data) {
-    Get.toNamed(PerformanceReportPage.routeName, arguments: {
-      "exam_id": data.examId.toString(),
-      "title": data.examDetails?.title.toString(),
-      "route": 1,
-      "cate_id": data.categoryDetails!.id!.toString()
-    });
+    Get.to(() => PerformanceReport(
+      onBackPress: (val) {},
+          id: data.examId.toString(),
+          catId: data.categoryDetails!.id!.toString(),
+          eId: "",
+          title: data.examDetails?.title.toString(),
+          route: 1,
+        ));
   }
 }

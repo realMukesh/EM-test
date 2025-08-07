@@ -5,8 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import '../../../widgets/common_textview_widget.dart';
-
 ///
 class PlayerStateSection extends StatelessWidget {
   const PlayerStateSection({super.key});
@@ -22,12 +20,14 @@ class PlayerStateSection extends StatelessWidget {
             color: _getStateColor(value.playerState),
           ),
           width: double.infinity,
-          padding:  EdgeInsets.all(8.0),
-          child: CommonTextViewWidget(text:
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
             value.playerState.toString(),
+            style: const TextStyle(
               fontWeight: FontWeight.w300,
               color: Colors.white,
-            align: TextAlign.center,
+            ),
+            textAlign: TextAlign.center,
           ),
         );
       },

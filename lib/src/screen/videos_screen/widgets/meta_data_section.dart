@@ -5,8 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import '../../../widgets/common_textview_widget.dart';
-
 ///
 class MetaDataSection extends StatelessWidget {
   const MetaDataSection({super.key});
@@ -48,9 +46,11 @@ class MetaDataSection extends StatelessWidget {
                           .map(
                             (rate) => DropdownMenuItem(
                               value: rate,
-                              child: CommonTextViewWidget(text:
+                              child: Text(
                                 '${rate}x',
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w300,
+                                ),
                               ),
                             ),
                           )

@@ -1,7 +1,7 @@
-import 'package:english_madhyam/src/screen/material/model/pdf_list_model.dart';
+import 'package:english_madhyam/resrc/models/model/pdf_list_model.dart';
 import 'package:get/get.dart';
 
-import 'package:english_madhyam/restApi/api_service.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
 
 class PdfController extends GetxController {
   RxBool loading = false.obs;

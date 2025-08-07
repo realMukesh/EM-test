@@ -1,8 +1,8 @@
-import 'package:english_madhyam/src/screen/practice/model/all_category.dart';
+import 'package:english_madhyam/resrc/models/model/all_category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:english_madhyam/restApi/api_service.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
 
 class PraticeController extends GetxController {
   var practiceListList = <PracticeQuizData>[].obs;
@@ -23,10 +23,10 @@ class PraticeController extends GetxController {
   var practiceCategoryList = [].obs;
   var subCategoryId = "";
 
-  void getPracticeCategory(parentId) {
+  void getSubCategories(parentId,bool isSavedQuestions) {
     try {
       isFirstLoadRunning(true);
-      apiService.getSubcategory(parentId: parentId).then((resp) {
+      apiService.getSubcategory(parentId: parentId,isSavedQuestions: isSavedQuestions).then((resp) {
         isFirstLoadRunning(false);
         if (resp!.data == "success") {
           practiceCategoryList.clear();

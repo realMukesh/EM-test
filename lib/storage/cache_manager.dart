@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:english_madhyam/src/screen/editorials_page/model/editorial_task_model.dart';
+import 'package:english_madhyam/resrc/models/model/editorial_detail_model/editorial_task_model.dart';
 import 'package:get_storage/get_storage.dart';
 
 enum CacheManagerKey { TOKEN,FCMTOKEN,USERNAME,PASSWORD,PROFILE,NAME,IMAGE,WALLET,IS_REMEMBER,EMAIL,MOBILE }

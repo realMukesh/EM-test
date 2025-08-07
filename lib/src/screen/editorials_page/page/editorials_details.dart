@@ -1,22 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:english_madhyam/restApi/api_service.dart';
-import 'package:english_madhyam/src/screen/editorials_page/model/editorial_task_model.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/regularTextViewDarkMode.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
+import 'package:english_madhyam/resrc/models/model/editorial_detail_model/editorial_task_model.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/widgets/regularTextView.dart';
 
 import 'package:english_madhyam/main.dart';
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
 import 'package:english_madhyam/src/screen/editorials_page/controller/editorial_detail_controler.dart';
-import 'package:english_madhyam/src/screen/editorials_page/page/audio_player.dart';
+import 'package:english_madhyam/src/screen/editorials_page/page/editorial_detail_widgets/audio_player.dart';
 import 'package:english_madhyam/src/screen/editorials_page/widgets/quiz_button.dart';
-import 'package:english_madhyam/src/screen/practice/widget/performance_report.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/screen/practice/performance_report.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:english_madhyam/storage/cache_manager.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -33,25 +31,26 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler_platform_interface/permission_handler_platform_interface.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-import '../../../utils/colors/colors.dart';
-import '../../exam/controller/examDetailController.dart';
+import '../../practice/controller/praticeExamDetailController.dart';
 import '../../favorite/controller/favoriteController.dart';
 import '../../pages/page/converter.dart';
-import '../../practice/widget/instructions.dart';
+import '../../practice/instructions.dart';
 
-class EditorialsDetailsPage extends StatefulWidget {
+class CommonEditorialsDetailsPage extends StatefulWidget {
   final int editorial_id;
   final String editorial_title;
 
-  const EditorialsDetailsPage(
+  const CommonEditorialsDetailsPage(
       {Key? key, required this.editorial_id, required this.editorial_title})
       : super(key: key);
 
   @override
-  _EditorialsDetailsPageState createState() => _EditorialsDetailsPageState();
+  _CommonEditorialsDetailsPageState createState() =>
+      _CommonEditorialsDetailsPageState();
 }
 
-class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
+class _CommonEditorialsDetailsPageState
+    extends State<CommonEditorialsDetailsPage>
     with SingleTickerProviderStateMixin, CacheManager {
   final FavoriteController _favoriteController = Get.put(FavoriteController());
 
@@ -63,9 +62,8 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
   bool didDownloadPDF = false;
   String type = "";
   int CurrentVideo = 0;
-  double custFontSize = 18;
+  double custFontSize = 17;
   double progress = 0;
-
   late bool _permissionReady;
   String TaskID = "";
   bool editable = false;
@@ -196,8 +194,8 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: CommonTextViewWidget(text: 'Error'),
-          content: CommonTextViewWidget(text: '${obj['error']}'),
+          title: const Text('Error'),
+          content: Text('${obj['error']}'),
         ),
       );
     }
@@ -236,9 +234,16 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
   @override
   void initState() {
     super.initState();
+    //darkmode=AdaptiveTheme.of(context).mode.isDark;
+
     readingData = getEditorialDescriptions(widget.editorial_id.toString());
     if (readingData.isNotEmpty) {
       editable = true;
+
+      // List<String> readingDataList = readingData.split("_");
+      // startingPoint = int.parse(readingDataList[0]);
+      // endingPoint = int.parse(readingDataList[1]);
+      // bookmark = int.parse(readingDataList[1]);
     }
 
     ///for listing of meaning list in drawer and highlighted word meanings
@@ -278,6 +283,7 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(25), bottomLeft: Radius.circular(25)),
           child: Drawer(
+            //backgroundColor: const Color(0xffccccff).withOpacity(0.6),
             child: Obx(() {
               if (controller.loading.value) {
                 return SizedBox(
@@ -292,6 +298,37 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
               } else {
                 return Column(
                   children: [
+                    /*Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                              onTap: () {
+                                setState(() {
+                                  darkmode = !darkmode;
+                                });
+                              },
+                              child: Container(
+                                  margin: const EdgeInsets.only(right: 20),
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: darkmode == true
+                                          ? blackColor
+                                          : whiteColor),
+                                  child: CustomDmSans(
+                                    text: darkmode == true
+                                        ? "Light Mode"
+                                        : "Dark Mode",
+                                    fontSize: 12,
+                                    color: darkmode == true
+                                        ? whiteColor
+                                        : blackColor,
+                                  ))),
+                        ],
+                      ),
+                    ),*/
                     const SizedBox(
                       height: 20,
                     ),
@@ -307,7 +344,7 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.1),
-                                  CommonTextViewWidget(
+                                  CustomDmSans(
                                     text: "No meanings Available",
                                     color: whiteColor,
                                     fontWeight: FontWeight.w600,
@@ -370,7 +407,7 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                                       )
                                                     : const SizedBox(),
                                                 TextButton(
-                                                  child: CommonTextViewWidget(
+                                                  child: RegularTextDarkMode(
                                                     text: controller
                                                         .meaningListModel
                                                         .value
@@ -422,11 +459,11 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                                 )
                                               ],
                                             ),
-                                            CommonTextViewWidget(
+                                            RegularTextDarkMode(
                                               text:
                                                   "${controller.meaningListModel.value.editorials![index].word} : ",
                                             ),
-                                            CommonTextViewWidget(
+                                            RegularTextDarkMode(
                                               text: resultText,
                                               maxLine: 10,
                                             ),
@@ -524,13 +561,17 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                             Row(
                               children: [
                                 Expanded(
-                                  child: CommonTextViewWidget(
-                                      text: _controller.editorials.value
-                                          .editorialDetails!.title
-                                          .toString(),
-                                      color: colorPrimary,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600),
+                                  child: Text(
+                                    _controller.editorials.value
+                                        .editorialDetails!.title
+                                        .toString(),
+                                    style: GoogleFonts.dmSans(
+                                        color: darkmode == false
+                                            ? redColor
+                                            : Colors.amber,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                                 GestureDetector(
                                   onTap: () {
@@ -540,13 +581,12 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             duration: Duration(seconds: 2),
-                                            content: CommonTextViewWidget(
-                                                text: editable
-                                                    ? "Reading along text enable"
-                                                    : "Reading along text disable")));
+                                            content: Text(editable
+                                                ? "Reading along text enable"
+                                                : "Reading along text disable")));
                                   },
                                   child: Container(
-                                      padding: EdgeInsets.all(5.adaptSize),
+                                      padding: const EdgeInsets.all(5),
                                       decoration: BoxDecoration(
                                           color:
                                               editable ? purplegrColor : white,
@@ -572,37 +612,12 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                             ),
                             Container(
                               height: MediaQuery.of(context).size.height * 0.2,
-                              padding: const EdgeInsets.all(6),
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(12.0)),
-                                child: CachedNetworkImage(
-                                  imageUrl: _controller.editorials.value
-                                      .editorialDetails!.image!,
-                                  placeholder: (context, url) => Container(
-                                    child: Image.asset(
-                                        "assets/img/noimage.png",
-                                        fit: BoxFit.cover),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                        color: colorPrimary,
-                                        height: context.height,
-                                        width: context.width,
-                                        child: Image.asset("assets/img/noimage.png",
-                                            fit: BoxFit.cover),
-                                      ),
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                      image: NetworkImage(_controller.editorials
+                                          .value.editorialDetails!.image!),
+                                      fit: BoxFit.cover)),
                             ),
                             const SizedBox(
                               height: 10,
@@ -613,132 +628,114 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.arrow_back_ios,
-                                          color: blackColor,
-                                          size: 8.adaptSize,
-                                        ),
-                                        Icon(
-                                          Icons.arrow_back_ios,
-                                          color: blackColor,
-                                          size: 8.adaptSize,
-                                        ),
-                                        const SizedBox(
-                                          width: 3,
-                                        ),
-                                        CommonTextViewWidget(
-                                          text: "Swipe",
-                                          color: purpleColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                        )
-                                      ],
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.arrow_back_ios,
+                                            color: blackColor,
+                                            size: 8,
+                                          ),
+                                          Icon(
+                                            Icons.arrow_back_ios,
+                                            color: blackColor,
+                                            size: 8,
+                                          ),
+                                          const SizedBox(
+                                            width: 3,
+                                          ),
+                                          CustomDmSans(
+                                            text: "Swipe",
+                                            color: purpleColor,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      readingData != null
-                                          ? GestureDetector(
-                                              onTap: () {
-                                                setReadingData(
-                                                    widget.editorial_id, null);
-                                                for (int i = 0;
-                                                    i <
-                                                        _controller
-                                                            .descritionColorlist
-                                                            .length;
-                                                    i++) {
-                                                  setState(() {
-                                                    _controller
-                                                        .descritionColorlist[i]
-                                                        .selected = false;
-                                                  });
-                                                }
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        duration: Duration(
-                                                            seconds: 2),
-                                                        content:
-                                                            CommonTextViewWidget(
-                                                                text:
-                                                                    "All data removed")));
-                                              },
-                                              child: Container(
-                                                  padding:
-                                                       EdgeInsets.all(8.adaptSize),
-                                                  decoration: BoxDecoration(
-                                                      color: editable
-                                                          ? purplegrColor
-                                                          : white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.3),
-                                                            offset:
-                                                                Offset(-2, 3),
-                                                            spreadRadius: 3,
-                                                            blurRadius: 3)
-                                                      ]),
-                                                  child: Icon(
-                                                    Icons.delete,
-                                                    color: editable
-                                                        ? white
-                                                        : purpleColor,
-                                                  )),
-                                            )
-                                          : SizedBox(),
-                                      _controller.editorials.value
-                                              .editorialDetails!.pdf!.isNotEmpty
-                                          ? downloadStart == true
-                                              ? Container(
-                                                  height: 20.adaptSize,
-                                                  width: 20.adaptSize,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth: 1.4,
-                                                    color: lightYellowColor,
-                                                  ),
-                                                )
-                                              : Align(
-                                                  alignment: Alignment.topRight,
-                                                  child: InkWell(
-                                                    onTap: () async {
-                                                      /// for downloading the pdf on tap
-                                                      _download(_controller
-                                                          .editorials
-                                                          .value
-                                                          .editorialDetails!
-                                                          .pdf![0]
-                                                          .file!);
-                                                    },
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          "assets/icon/downloadicon.svg",
-                                                        ),
-                                                        CommonTextViewWidget(
-                                                            text: "PDF")
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                          : const SizedBox(),
-                                    ],
-                                  )
+                               Row(
+                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 children: [
+                                  readingData!=null? GestureDetector(
+                                     onTap: () {
+                                       setReadingData(
+                                           widget.editorial_id,
+                                          null);
+                                       for(int i=0;i<_controller
+                                           .descritionColorlist.length;i++){
+                                        setState(() {
+                                          _controller
+                                              .descritionColorlist[i].selected=false;
+                                        });
+                                       }
+                                       ScaffoldMessenger.of(context).showSnackBar(
+                                           SnackBar(
+                                               duration: Duration(seconds: 2),
+                                               content: Text("All data removed")));
+                                     },
+                                     child: Container(
+                                         padding: const EdgeInsets.all(5),
+                                         decoration: BoxDecoration(
+                                             color:
+                                             editable ? purplegrColor : white,
+                                             borderRadius:
+                                             BorderRadius.circular(8),
+                                             boxShadow: [
+                                               BoxShadow(
+                                                   color: Colors.grey
+                                                       .withOpacity(0.3),
+                                                   offset: Offset(-2, 3),
+                                                   spreadRadius: 3,
+                                                   blurRadius: 3)
+                                             ]),
+                                         child: Icon(
+                                           Icons.delete,
+                                           color: editable ? white : purpleColor,
+                                         )),
+                                   ):SizedBox(),
+                                   _controller.editorials.value.editorialDetails!
+                                       .pdf!.isNotEmpty
+                                       ? downloadStart == true
+                                       ? Container(
+                                     height: 20,
+                                     width: 20,
+                                     child: CircularProgressIndicator(
+                                       strokeWidth: 1.4,
+                                       color: lightYellowColor,
+                                     ),
+                                   )
+                                       : Align(
+                                     alignment: Alignment.topRight,
+                                     child: InkWell(
+                                       onTap: () async {
+                                         /// for downloading the pdf on tap
+                                         _download(_controller
+                                             .editorials
+                                             .value
+                                             .editorialDetails!
+                                             .pdf![0]
+                                             .file!);
+                                       },
+                                       child: Column(
+                                         crossAxisAlignment:
+                                         CrossAxisAlignment.center,
+                                         children: [
+                                           SvgPicture.asset(
+                                             "assets/icon/downloadicon.svg",
+                                           ),
+                                           CustomDmSans(text: "PDF")
+                                         ],
+                                       ),
+                                     ),
+                                   )
+                                       : const SizedBox(),
+                                 ],
+                               )
                                 ],
                               ),
                             ),
@@ -757,6 +754,10 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                                   .selected
                                               ? Colors.yellow
                                               : Colors.transparent,
+                                          // startingPoint <= i &&
+                                          //         i <= endingPoint
+                                          //     ? Colors.yellow
+                                          //     : Colors.transparent,
                                           color: _controller
                                                       .descritionColorlist[i]
                                                       .status ==
@@ -767,7 +768,7 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                                       .isDark
                                                   ? whiteColor
                                                   : blackColor,
-                                          fontSize: custFontSize.fSize),
+                                          fontSize: custFontSize),
                                       recognizer:
                                           _controller.descritionColorlist[i]
                                                       .status ==
@@ -837,16 +838,17 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                                                       borderRadius:
                                                                           BorderRadius.circular(
                                                                               4)),
-                                                                  child: CommonTextViewWidget(
-                                                                      text:
-                                                                          "No meaning available",
-                                                                      fontSize:
-                                                                          custFontSize.fSize,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                      color:
-                                                                          whiteColor),
+                                                                  child: Text(
+                                                                    "No meaning available",
+                                                                    style: GoogleFonts.dmSans(
+                                                                        fontSize:
+                                                                            custFontSize,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w400,
+                                                                        color:
+                                                                            whiteColor),
+                                                                  ),
                                                                 );
                                                               } else {
                                                                 return Container(
@@ -884,15 +886,15 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                                                                               ),
                                                                             )),
                                                                       ),
-                                                                      CommonTextViewWidget(
-                                                                          text:
-                                                                              "${_controller.meaning.value.word.toString()} :${_htmlConverter.parseHtmlString(controller.meaning.value.vocab!.meaning!)} ",
-                                                                          fontSize:
-                                                                              custFontSize.fSize,
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          color:
-                                                                              whiteColor.withOpacity(0.8)),
+                                                                      Text(
+                                                                        "${_controller.meaning.value.word.toString()} :${_htmlConverter.parseHtmlString(controller.meaning.value.vocab!.meaning!)} ",
+                                                                        style: GoogleFonts.dmSans(
+                                                                            fontSize:
+                                                                                custFontSize,
+                                                                            fontWeight:
+                                                                                FontWeight.w500,
+                                                                            color: whiteColor.withOpacity(0.8)),
+                                                                      ),
                                                                     ],
                                                                   ),
                                                                 );
@@ -913,11 +915,10 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
 
                                                         ScaffoldMessenger.of(
                                                                 context)
-                                                            .showSnackBar(SnackBar(
-                                                                content:
-                                                                    CommonTextViewWidget(
-                                                                        text:
-                                                                            "Now Select the end of the bookmark")));
+                                                            .showSnackBar(
+                                                                const SnackBar(
+                                                                    content: Text(
+                                                                        "Now Select the end of the bookmark")));
                                                       } else {
                                                         endingPoint = i;
 
@@ -970,7 +971,8 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.0),
-                            ExamButtonWidget(
+                            QuizButton(
+                              controller: controller,
                               editorialDetails:
                                   controller.editorials.value.editorialDetails!,
                             ),
@@ -982,14 +984,14 @@ class _EditorialsDetailsPageState extends State<EditorialsDetailsPage>
                         alignment: Alignment.bottomCenter,
                         child: _controller.editorials.value.editorialDetails!
                                 .audio!.isNotEmpty
-                            ? const EditorialAudioPlayer()
+                            ? EditorialAudioPlayer()
                             : const Text(""),
                       )
                     ],
                   );
                 } else {
-                  return Center(
-                    child: CommonTextViewWidget(text: "NO DATA NOW!!"),
+                  return const Center(
+                    child: Text("NO DATA NOW!!"),
                   );
                 }
               }

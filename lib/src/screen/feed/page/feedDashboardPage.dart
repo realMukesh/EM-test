@@ -1,11 +1,10 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
 import 'package:english_madhyam/src/commonController/authenticationController.dart';
 import 'package:english_madhyam/src/screen/feed/controller/feed_controller.dart';
 import 'package:english_madhyam/src/screen/feed/page/phraseDayPage.dart';
 import 'package:english_madhyam/src/screen/feed/page/wordDayPage.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +12,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../custom/toolbarTitle.dart';
-import '../../../widgets/common_textview_widget.dart';
 
 class FeedDashboard extends StatefulWidget {
   FeedDashboard({Key? key}) : super(key: key);
@@ -72,8 +70,10 @@ class _FeedDashboardState extends State<FeedDashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: purpleColor.withOpacity(0.15),
       appBar: AppBar(
           elevation: 0.0,
+          //backgroundColor: Colors.transparent,
           centerTitle: true,
           automaticallyImplyLeading: true,
           title: const ToolbarTitle(
@@ -116,10 +116,10 @@ class _FeedDashboardState extends State<FeedDashboard>
                 }
               },
               child: Padding(
-                padding: EdgeInsets.all(8.0.adaptSize),
+                padding: const EdgeInsets.all(8.0),
                 child: SvgPicture.asset(
                   "assets/icon/calendar.svg",
-                  color: purpleColor,height: 30.adaptSize,
+                  color: purpleColor,
                 ),
               ),
             )
@@ -128,10 +128,7 @@ class _FeedDashboardState extends State<FeedDashboard>
         length: 2,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: buildTabWidget(),
-            ),
+            buildTabWidget(),
             Expanded(
               child: TabBarView(
                   physics: NeverScrollableScrollPhysics(),
@@ -166,24 +163,49 @@ class _FeedDashboardState extends State<FeedDashboard>
   }
 
   Widget buildTabWidget() {
-    return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 6.adaptSize),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.05,
       child: TabBar(
-          indicatorSize: TabBarIndicatorSize.tab,
+          //unselectedLabelColor: blackColor,
+          indicatorSize: TabBarIndicatorSize.label,
           controller: tabController,
-          unselectedLabelStyle: TextStyle(
-              fontSize: 18.fSize, fontWeight: FontWeight.w500),
-          labelStyle:  TextStyle(
-              fontSize: 18.fSize, fontWeight: FontWeight.w500, color: Colors.white),
+          isScrollable: false,
+          physics: NeverScrollableScrollPhysics(),
+          labelColor: Colors.white,
+          unselectedLabelColor:
+          AdaptiveTheme.of(context)
+              .mode
+              .isDark ? Colors.white : Colors.black,
           dividerColor: Colors.transparent,
           indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(50), color: purpleColor),
-          tabs: const [
+          tabs: [
             Tab(
-              text: "Word",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "WORD",
+                    style: GoogleFonts.roboto(fontSize: 14),
+                  ),
+                ),
+              ),
             ),
             Tab(
-              text: "Phrase",
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child:
+                      Text("Phrase", style: GoogleFonts.roboto(fontSize: 14)),
+                ),
+              ),
             ),
           ]),
     );

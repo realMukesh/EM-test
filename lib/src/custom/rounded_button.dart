@@ -1,9 +1,12 @@
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
 
-class CircularRoundedButton extends StatelessWidget {
+
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+
+
+import '../../resrc/widgets/boldTextView.dart';
+class RoundedButton extends StatelessWidget {
   final String text;
   final Function press;
   final Color color, textColor;
@@ -12,11 +15,11 @@ class CircularRoundedButton extends StatelessWidget {
   final bool showIcon;
   final FontWeight weight;
 
-  const CircularRoundedButton(
+  const RoundedButton(
       {Key? key,
         required this.text,
         required this.press,
-        this.color = colorPrimary,
+        this.color = primaryColor,
         this.textColor = Colors.white,
         this.textSize = 20,
         this.showIcon = false,
@@ -35,17 +38,17 @@ class CircularRoundedButton extends StatelessWidget {
           animationDuration: const Duration(seconds: 1),
           color: color,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6)),
+              borderRadius: BorderRadius.circular(10)),
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           onPressed: () {
             Future.delayed(Duration.zero, () async {
               press();
             });
           },
-          child: CommonTextViewWidgetDarkMode(
+          child: BoldTextView(
             text: text,
             color: textColor,
-            fontSize: textSize,fontWeight: FontWeight.w400,
+            textSize: textSize,weight: FontWeight.w400,
             /*weight: weight,*/
           )),
     );

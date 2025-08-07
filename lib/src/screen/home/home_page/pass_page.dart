@@ -1,18 +1,16 @@
 import 'dart:io';
 
-import 'package:english_madhyam/src/screen/payment/controller/paymentController.dart';
-import 'package:english_madhyam/src/screen/payment/model/purchase_history_model.dart';
-import 'package:english_madhyam/src/widgets/rounded_button.dart';
+import 'package:english_madhyam/resrc/models/model/purchase_history_model.dart';
+import 'package:english_madhyam/resrc/widgets/rounded_button.dart';
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/screen/payment/controller/paymentController.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:get/get.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import '../../../widgets/purchase_history_widget.dart';
-import '../../payment/controller/transectionController.dart';
 import '../../payment/page/choose_plan_details.dart';
 import '../../payment/page/in_app_plan_page.dart';
 
@@ -26,7 +24,7 @@ class PassPage extends StatefulWidget {
 class _PassPageState extends State<PassPage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  final TransactionController _controller = Get.put(TransactionController());
+  final PaymentController _controller = Get.put(PaymentController());
 
   @override
   void initState() {
@@ -37,7 +35,7 @@ class _PassPageState extends State<PassPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetBuilder<TransactionController>(
+      body: GetBuilder<PaymentController>(
         builder: (controller) {
           return Scaffold(
             body: Stack(
@@ -48,7 +46,7 @@ class _PassPageState extends State<PassPage> {
                     children: [
                       planHistoryList(),
                       Platform.isAndroid
-                          ?  ChoosePlanDetails()
+                          ? const ChoosePlanDetails()
                           : InAppPlanDetail()
                     ],
                   ),
@@ -64,11 +62,8 @@ class _PassPageState extends State<PassPage> {
   Widget planHistoryList() {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.0,
-        centerTitle: true,
-        title: const ToolbarTitle(
-          title: 'Purchase History',
-        ),
+elevation: 1,
+        title: const Text( "Purchase History",style: TextStyle( fontSize: 20,fontWeight: FontWeight.w500),),
       ),
       body: Stack(
         children: [
@@ -82,10 +77,10 @@ class _PassPageState extends State<PassPage> {
                     onRefresh: _onRefresh,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: GetX<TransactionController>(
+                      child: GetX<PaymentController>(
                           init: _controller,
                           builder: (contr) {
-                            if (contr.loading.value) {
+                            if (contr.purchaseloading.value) {
                               return SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.8,
@@ -98,7 +93,9 @@ class _PassPageState extends State<PassPage> {
                                 ),
                               );
                             } else {
-                              if (contr.planHistoryList
+                              if (contr.purchasehistory.value.purchaseHistory ==
+                                      null ||
+                                  contr.purchasehistory.value.purchaseHistory!
                                       .isEmpty) {
                                 return SizedBox(
                                   height:
@@ -106,7 +103,7 @@ class _PassPageState extends State<PassPage> {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CommonTextViewWidget(
+                                      CustomDmSans(
                                         text: "No Plan Found",
                                         color: blackColor,
                                       ),
@@ -114,8 +111,8 @@ class _PassPageState extends State<PassPage> {
                                           text: "Choose Plan",
                                           press: () {
                                             if (Platform.isAndroid) {
-                                              Get.toNamed(ChoosePlanDetails.routeName);
-
+                                              Get.to(() =>
+                                                  const ChoosePlanDetails());
                                             } else {
                                               Get.to(() => InAppPlanDetail());
                                             }
@@ -125,7 +122,8 @@ class _PassPageState extends State<PassPage> {
                                 );
                               } else {
                                 return refund(
-                                    purchase: contr.planHistoryList);
+                                    purchase: contr.purchasehistory.value
+                                        .purchaseHistory!);
                               }
                             }
                           }),
@@ -135,18 +133,15 @@ class _PassPageState extends State<PassPage> {
               ],
             ),
           ),
-                  _controller.planHistoryList.isNotEmpty
+          _controller.purchasehistory.value.purchaseHistory != null &&
+                  _controller.purchasehistory.value.purchaseHistory!.isNotEmpty
               ? Align(
                   alignment: Alignment.bottomCenter,
                   child: RoundedButton(
                       text: "Extend Validity",
                       press: () {
-                        if(Get.isRegistered<PaymentController>()){
-                          PaymentController payment=Get.find();
-                          payment.loading(false);
-                        }
                         if (Platform.isAndroid) {
-                          Get.toNamed(ChoosePlanDetails.routeName);
+                          Get.to(() => const ChoosePlanDetails());
                         } else {
                           Get.to(() => InAppPlanDetail());
                         }
@@ -164,10 +159,115 @@ class _PassPageState extends State<PassPage> {
         itemCount: purchase.length,
         itemBuilder: (context, index) {
           var data = purchase[index];
-          return PurchaseHistoryWidget(
-            data: data,
+          return Card(
+            elevation: 5,
+            margin:
+                const EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 10),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data.planTitle!.length > 20
+                        ? "${data.planTitle!.substring(0, 18)}.."
+                        : data.planTitle!,
+                    style: const TextStyle(
+                        /*color: Colors.black,*/
+                        fontWeight: FontWeight.w900,
+                        fontSize: 16),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomDmSans(
+                              text: 'Date of Purchase :${data.startDate}',
+                              fontSize: 14,
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            CustomDmSans(
+                              text: 'End Date of Subscription :${data.endDate}',
+                              fontSize: 14,
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            CustomDmSans(
+                              text:
+                                  "Plan Duration : ${data.planDuration!} Month",
+                              fontSize: 14,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10, left: 10),
+                        child: Platform.isIOS
+                            ? buildText(data)
+                            : CustomDmSans(
+                                text: " \u{20B9}${data.fee!.toString()}",
+                                color: greenColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           );
         });
+  }
+
+  buildText(PurchaseHistory purchaseHistory) {
+    if (purchaseHistory.planDuration == 1) {
+      return CustomDmSans(
+        text: " \u{20B9}${"105"}",
+        color: greenColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      );
+    } else if (purchaseHistory.planDuration == 3) {
+      return CustomDmSans(
+        text: " \u{20B9}${"259"}",
+        color: greenColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      );
+    } else if (purchaseHistory.planDuration == 12) {
+      return CustomDmSans(
+        text: " \u{20B9}${"649"}",
+        color: greenColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      );
+    } else if (purchaseHistory.planDuration == 6) {
+      return CustomDmSans(
+        text: " \u{20B9}${"449"}",
+        color: greenColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   void _onRefresh() async {

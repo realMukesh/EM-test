@@ -1,14 +1,11 @@
-import 'dart:io';
-
-import 'package:english_madhyam/restApi/api_service.dart';
-import 'package:english_madhyam/utils/ui_helper.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
+import 'package:english_madhyam/resrc/utils/ui_helper.dart';
 import 'package:english_madhyam/src/commonController/authenticationController.dart';
 import 'package:english_madhyam/storage/cache_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import '../../../screen/bottom_nav/dashboard_page.dart';
 import '../../otp/send_otp_model/send_otp.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -51,13 +48,47 @@ class SignupController extends GetxController with CacheManager {
       Get.offNamedUntil(DashboardPage.routeName, (route) => false);
     } else {
       loading(false);
+
+
+
       Fluttertoast.showToast(
           msg: response!.message! + '      ${response.result!}');
-      Future.delayed(const Duration(seconds: 3), () async {
+      Future.delayed(Duration(seconds: 3), () async{
         authenticationController.handleSignOut();
+
         await apiService.logOutApi();
         authenticationController.removeToken();
       });
+
+
+
+    }
+  }
+
+  Future<void> otpVerify(
+      {required context, required String mobile, required String otp}) async {
+    loading(true);
+    Map requestBody = {"phone": mobile, "otp": otp};
+    SendOTP? res = await apiService.verifyOtp(requestBody);
+    loading(false);
+    if (res?.result == "success") {
+      if (res?.status == "old") {
+        authenticationController.login("", mobile, context);
+      } else {
+        try {
+          UiHelper.showSnakbarSucess(context, res?.message ?? "");
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => RegisterScreen(
+                        mobile: mobile,
+                      )),
+              (route) => route.isFirst);
+        } catch (e) {
+          UiHelper.showSnakbarMsg(context, e.toString());
+        }
+      }
+    } else {
+      UiHelper.showSnakbarMsg(context, res?.message ?? "");
     }
   }
 }

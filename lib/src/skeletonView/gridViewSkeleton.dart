@@ -1,10 +1,14 @@
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
+// import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../utils/ui_helper.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+
+
+import '../../resrc/widgets/boldTextView.dart';
+import '../../resrc/utils/ui_helper.dart';
 import '../screen/pages/page/setup.dart';
-import '../widgets/common_textview_widget.dart';
 class GridViewSkeleton extends StatelessWidget {
   const GridViewSkeleton({Key? key}) : super(key: key);
 
@@ -52,10 +56,10 @@ class GridViewSkeleton extends StatelessWidget {
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(10),
                             bottomRight: Radius.circular(10)),
-                        color: accentColor),
-                    child:  CommonTextViewWidget(
+                        color: primaryColor1),
+                    child: const BoldTextView(
                       text: "",
-                      fontSize: 12,
+                      textSize: 12,
                       color: white,
                     ),
                   ),

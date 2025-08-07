@@ -1,7 +1,7 @@
-import 'package:english_madhyam/src/screen/Notification_screen/model/NotificationModel.dart';
-import 'package:english_madhyam/src/screen/Notification_screen/controller/notification_controller.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/resrc/models/model/NotificationModel.dart';
+import 'package:english_madhyam/src/screen/Notification_screen/controller/notification_contr.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
@@ -27,13 +27,16 @@ class _NotificationDetailState extends State<NotificationDetail> {
       appBar: AppBar(
         backgroundColor: themePurpleColor,
         leading: const BackButton(),
-        title: CommonTextViewWidget(text:
+        title: Text(
           widget.notification.title!,
+          style: GoogleFonts.roboto(
             fontSize: 18
+          ),
         ),
 
       ),
       body: SingleChildScrollView(
+
         child: Padding(
           padding: const EdgeInsets.all(18.0),
           child: Column(
@@ -50,7 +53,7 @@ class _NotificationDetailState extends State<NotificationDetail> {
               const SizedBox(
                 height: 10,
               ),
-              CommonTextViewWidget(text:widget.notification.text! ,align: TextAlign.justify,fontSize: 17),
+              CustomDmSans(text:widget.notification.text! ,align: TextAlign.justify,fontSize: 17),
             ],
 
           ),

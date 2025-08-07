@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/src/screen/login/page/login_page.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+import 'package:english_madhyam/src/auth/login/login_page.dart';
 import 'package:english_madhyam/src/screen/category/controller/libraryController.dart';
 import 'package:english_madhyam/src/screen/category/page/libraryPage.dart';
 import 'package:english_madhyam/src/screen/home/controller/home_controller.dart';
@@ -14,21 +13,19 @@ import 'package:english_madhyam/src/screen/home/home_page/purchase_history_scree
 import 'package:english_madhyam/src/setting/page/settingPage.dart';
 
 import 'package:english_madhyam/src/screen/profile/page/profile_page.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:english_madhyam/src/screen/pages/page/contact_us.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
+import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:english_madhyam/restApi/api_service.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
 import '../../commonController/authenticationController.dart';
 import '../favorite/controller/favoriteController.dart';
 import '../favorite/page/attemptedExamList.dart';
-import '../savedQuestion/page/saveQuestionListPage.dart';
+import '../favorite/page/saveQuestionList.dart';
 import '../favorite/page/saveWordsList.dart';
-import '../payment/controller/transectionController.dart';
 
 class DrawerNavigation extends StatefulWidget {
   const DrawerNavigation({Key? key}) : super(key: key);
@@ -42,9 +39,10 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
   String message = '';
   String image = '';
   final ProfileControllers _subcontroller = Get.find();
-  final TransactionController _paymentController = Get.put(TransactionController());
-  final LibraryController libraryController = Get.put(LibraryController());
-  final HomeController homeController = Get.find();
+  final PaymentController _paymentController = Get.put(PaymentController());
+  final FavoriteController _favoriteController = Get.find();
+  final LibraryController libraryController=Get.put(LibraryController());
+final HomeController homeController = Get.find();
   @override
   void initState() {
     super.initState();
@@ -124,7 +122,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextViewWidget(
+                  CustomDmSans(
                     text: " General",
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -195,28 +193,22 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
             break;
           case 1:
             // _favoriteController.getSaveQuestionList();
-            //Get.to(() => SaveQuestionList());
-            //_favoriteController.isSavedQuestionNavigation.value = true;
+            _favoriteController.isSavedQuestionNavigation.value=true;
+            libraryController.parentCategories.clear();
+
             Get.back();
-            Get.toNamed(SaveQuestionList.routeName);
-            /*if (Get.isRegistered<LibraryController>()) {
-              LibraryController controller = Get.find();
-              controller.isSavedQuestions(true);
-              controller.initApiCall();
-              Get.to(() => LibraryDashboard());
-            }*/
+            // Get.to(() => SaveQuestionList());
+            Get.to(() => MaterialParentCategoriesPage
+());
             break;
           case 2:
+            _favoriteController.getSaveWordsList();
             Get.back();
-            if (Get.isRegistered<FavoriteController>()) {
-              FavoriteController controller = Get.find();
-              controller.getSaveWordsList();
-              Get.to(() => SaveWordList());
-            }
+            Get.to(() => SaveWordList());
             break;
           case 3:
             Get.back();
-            Get.to(() => const AttemptedExamList());
+            Get.to(() => AttemptedExampList());
             break;
           case 4:
             onShare(context);
@@ -240,26 +232,26 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 6),
         child: Row(
           children: [
             Icon(
               imagePath,
-              color: colorPrimary,size: 30.adaptSize,
+              color: primaryColor,
             ),
             const SizedBox(
               width: 15,
             ),
-            CommonTextViewWidget(
+            CustomDmSans(
               text: menuTitle,
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: AdaptiveTheme.of(context).mode.isDark?white:colorSecondary,
+              color: blackColor,
             ),
             const Spacer(
               flex: 3,
             ),
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios,
               size: 15,
             )
@@ -278,15 +270,14 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
   }
 
   logout() async {
+
+
     authenticationController.handleSignOut();
 
     await apiService.logOutApi();
     authenticationController.removeToken();
     authenticationController.loading(false);
-
-    Get.offNamedUntil(LoginPage.routeName, (route) => false);
-
-    //Get.offAll(LoginPage());
+    Get.offAll(LoginPage());
 
     // Navigator.of(context).pushAndRemoveUntil(
     //     MaterialPageRoute(builder: (ctx) => LoginPage()), (route) => false);
@@ -304,92 +295,91 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
           borderSide: const BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.circular(15)),
       child: GetX<AuthenticationManager>(
-          init: authenticationController,
-          builder: (ctx) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 18.0, bottom: 8),
-                  child: CommonTextViewWidget(
-                    text: "English Madhyam",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
+        init: authenticationController,
+        builder: (ctx) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 18.0, bottom: 8),
+                child: CustomDmSans(
+                  text: "English Madhyam",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 0.0, bottom: 18),
-                  child: CommonTextViewWidget(
-                    text: "Are you sure you want to Logout ?",
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                  ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 0.0, bottom: 18),
+                child: CustomDmSans(
+                  text: "Are you sure you want to Logout ?",
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
                 ),
-                authenticationController.loading.value
-                    ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
-                      )
-                    : Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pop(context);
-                              },
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(15)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CommonTextViewWidget(
-                                    align: TextAlign.center,
-                                    text: "No",
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
+              ),
+              authenticationController.loading.value?Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ):Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(context);
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          borderRadius:
+                              BorderRadius.only(bottomLeft: Radius.circular(15)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomDmSans(
+                            align: TextAlign.center,
+                            text: "No",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.black,
                           ),
-                          const VerticalDivider(
-                            width: 1,
-                            thickness: 0.2,
-                            color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const VerticalDivider(
+                    width: 1,
+                    thickness: 0.2,
+                    color: Colors.white,
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        // logout.logout();
+                        logout();
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          borderRadius:
+                              BorderRadius.only(bottomRight: Radius.circular(15)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomDmSans(
+                            text: "Yes",
+                            align: TextAlign.center,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            color: Colors.black,
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                // logout.logout();
-                                logout();
-                              },
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(15)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CommonTextViewWidget(
-                                    text: "Yes",
-                                    align: TextAlign.center,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      )
-              ],
-            );
-          }),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          );
+        }
+      ),
     );
   }
 }

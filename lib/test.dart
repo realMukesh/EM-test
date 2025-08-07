@@ -1,4 +1,3 @@
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -92,7 +91,7 @@ class _FeedItemState extends State<FeedItem> {
                     Column(
                       key: widget.formKey,
                       children: [
-                        CommonTextViewWidget(text:widget.formKey.currentContext?.size?.height.toString() ?? ''),
+                        Text(widget.formKey.currentContext?.size?.height.toString() ?? ''),
                         Text(
                           '2024-08-04',
                           style: GoogleFonts.raleway(

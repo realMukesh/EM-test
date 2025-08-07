@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/common_textview_widget.dart';
-
 
 
 class VideoScreen extends StatelessWidget {
@@ -11,7 +9,7 @@ class VideoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: CommonTextViewWidget(text:"Video Screen"),
+        child: Text("Video Screen"),
       ),
     );
   }

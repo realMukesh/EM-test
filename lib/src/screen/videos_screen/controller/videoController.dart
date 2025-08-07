@@ -1,7 +1,7 @@
-import 'package:english_madhyam/src/screen/videos_screen/model/video_cat_model.dart';
-import 'package:english_madhyam/src/screen/videos_screen/model/youtube_list.dart';
+import 'package:english_madhyam/resrc/models/model/video_cat_model.dart';
+import 'package:english_madhyam/resrc/models/model/youtube_list.dart';
 import 'package:get/get.dart';
-import 'package:english_madhyam/restApi/api_service.dart';
+import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
 
 class VideoController extends GetxController {
   RxBool loading = true.obs;
@@ -13,11 +13,10 @@ class VideoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    initApiCall();
+    getVideoList();
   }
-
   Future<bool> videoDetail({required String id}) async {
-    var dataNotEmpty = false;
+    var dataNotEmpty=false;
     loading(true);
     try {
       var response = await apiService.videoListPro(
@@ -25,7 +24,7 @@ class VideoController extends GetxController {
       );
       loading(false);
       if (response != null) {
-        dataNotEmpty = true;
+        dataNotEmpty=true;
         videoList.value = response;
       }
     } catch (e) {
@@ -36,21 +35,20 @@ class VideoController extends GetxController {
     return dataNotEmpty;
   }
 
-  void initApiCall() async {
+  void getVideoList() async {
     loading(true);
     try {
-      var response = await apiService.videoCatPro();
+      var response = await apiService.videoCatPro("1");
       loading(false);
-      if (response != null && response.categories?.data != null) {
+      if (response != null && response.categories?.data!=null) {
         freeVideoList.clear();
         paidVideoList.clear();
-        if (response.categories!.data!.isNotEmpty) {
-          freeVideoList.addAll(
-              response.categories!.data!.where((i) => i.type == 0).toList());
-          paidVideoList.addAll(
-              response.categories!.data!.where((i) => i.type == 1).toList());
+        if(response.categories!.data!.isNotEmpty){
+          freeVideoList.addAll(response.categories!.data!.where((i) => i.type==0).toList());
+          paidVideoList.addAll(response.categories!.data!.where((i) => i.type==1).toList());
         }
-      } else {
+      }
+      else {
         print("size_data nof fon}");
         return null;
       }

@@ -1,10 +1,7 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../widgets/common_textview_widget.dart';
 
 class RefferEarn extends StatelessWidget {
   const RefferEarn({Key? key}) : super(key: key);
@@ -14,7 +11,7 @@ class RefferEarn extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 6, bottom: 4, left: 10, right: 10),
       decoration: BoxDecoration(
-          color: AdaptiveTheme.of(context).mode.isDark?Colors.transparent:authGreyColor,
+          color: authGreyColor,
           border: Border.all(color: greyColor.withOpacity(0.2), width: 2),
           borderRadius: BorderRadius.circular(20)),
       child: Column(
@@ -30,11 +27,12 @@ class RefferEarn extends StatelessWidget {
               Expanded(
                 child: Column(
                   children: [
-                    CommonTextViewWidget(text:
+                    Text(
                       "Share the app with your friends",
+                      style: GoogleFonts.lato(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: blackColor
+                          color: blackColor),
                     ),
                     const SizedBox(
                       height: 10,
@@ -47,11 +45,12 @@ class RefferEarn extends StatelessWidget {
                         decoration: BoxDecoration(
                             color: blackColor,
                             borderRadius: BorderRadius.circular(25)),
-                        child: CommonTextViewWidgetDarkMode(text:
+                        child: Text(
                           "Share Now",
+                          style: GoogleFonts.lato(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
-                              color: whiteColor
+                              color: whiteColor),
                         ),
                       ),
                     )

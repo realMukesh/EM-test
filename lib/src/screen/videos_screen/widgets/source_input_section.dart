@@ -5,8 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
-import '../../../widgets/common_textview_widget.dart';
-
 ///
 class SourceInputSection extends StatefulWidget {
   const SourceInputSection({super.key});
@@ -228,7 +226,7 @@ class _Button extends StatelessWidget {
             },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: CommonTextViewWidget(text:action),
+        child: Text(action),
       ),
     );
   }

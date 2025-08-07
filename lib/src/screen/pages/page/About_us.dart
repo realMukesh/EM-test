@@ -1,5 +1,5 @@
 import 'package:english_madhyam/src/screen/pages/controller/cms_controller.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
@@ -27,7 +27,7 @@ class _AboutUsState extends State<AboutUs> {
       ),
       body: Obx((){
         if(_cmsController.loading==true){
-          return SizedBox(
+          return Container(
             height: MediaQuery.of(context).size.height*0.8,
             child: Center(
               child: Lottie.asset("assets/animations/loader.json",height: MediaQuery.of(context).size.height*0.14,),
@@ -39,7 +39,7 @@ class _AboutUsState extends State<AboutUs> {
             child: SingleChildScrollView(
 
               child: Html(
-                data: _cmsController.cmsData.value.cmsPages?.cmsPages?.aboutUs??"No Data Found",
+                data: _cmsController.cmsData.value.cmsPages!.cmsPages!.aboutUs!,
               ),
             ),
           );

@@ -1,15 +1,16 @@
-import 'package:english_madhyam/src/screen/Notification_screen/controller/notification_controller.dart';
 import 'package:get/get.dart';
+import '../Notification_screen/controller/notification_contr.dart';
 import '../home/controller/home_controller.dart';
-import '../profile/controller/profile_controllers.dart';
+import '../practice/controller/praticeController.dart';
 import 'controller/dashboard_controller.dart';
 
 class RootBinding implements Bindings {
   @override
   void dependencies() {
-    Get.put<DashboardController>(DashboardController());
-    Get.put<ProfileControllers>(ProfileControllers());
-    Get.put<NotifcationController>(NotifcationController(),);
-    Get.put<HomeController>(HomeController());
+    Get.put<DashboardController>(DashboardController(),permanent: true);
+ /*   Get.put<NotifcationController>(NotifcationController(),permanent: true);
+    Get.put<QuizListController>(QuizListController(),permanent: true);
+    Get.put<HomeController>(HomeController(),permanent: true);*/
+
   }
 }

@@ -1,23 +1,20 @@
 import 'dart:async';
-import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
-import 'package:english_madhyam/utils/size_utils.dart';
-import 'package:english_madhyam/utils/ui_helper.dart';
+import 'package:english_madhyam/resrc/utils/app_colors.dart';
+import 'package:english_madhyam/resrc/utils/ui_helper.dart';
+import 'package:english_madhyam/src/auth/sign_up/controller/signup_controller.dart';
 import 'package:english_madhyam/src/commonController/authenticationController.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:english_madhyam/src/widgets/common_textview_widget.dart';
+import 'package:english_madhyam/src/utils/colors/colors.dart';
+import 'package:english_madhyam/src/utils/custom_roboto/custom_roboto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pinput/pinput.dart';
-import '../../screen/login/controller/login_controller.dart';
-import '../../widgets/common_textview_widget.dart';
-import '../../widgets/loading.dart';
-import '../../widgets/regularTextViewDarkMode.dart';
-import '../../widgets/rounded_button.dart';
+import '../../../resrc/widgets/boldTextView.dart';
+import '../../../resrc/widgets/loading.dart';
+import 'package:english_madhyam/resrc/widgets/regularTextView.dart';
+import '../../../resrc/widgets/rounded_button.dart';
 
 class OtpPage extends StatefulWidget {
   final String mobile;
@@ -29,9 +26,8 @@ class OtpPage extends StatefulWidget {
 }
 
 class _OtpPageState extends State<OtpPage> {
+  final SignupController controller = Get.put(SignupController());
   final AuthenticationManager authenticationController = Get.find();
-  final LoginController controller = Get.find();
-
   TextEditingController otp = TextEditingController();
   final ValueNotifier<String> otpErrorNotifier = ValueNotifier<String>("");
   late Timer _timer;
@@ -60,7 +56,7 @@ class _OtpPageState extends State<OtpPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       key: scaffoldKey,
-      //backgroundColor: whiteColor,
+      backgroundColor: whiteColor,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -70,13 +66,12 @@ class _OtpPageState extends State<OtpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: size.height * 0.05),
-                  CommonTextViewWidget(
+                  CustomRoboto(
                     text: "Get Better Every Day, Practice",
-                    fontSize: 18,
-                    color: Colors.black,
+                    fontSize: 18,color: Colors.black,
                     fontWeight: FontWeight.w500,
                   ),
-                  CommonTextViewWidget(
+                  CustomRoboto(
                     text: "Test Series and Free Daily Quizzes",
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
@@ -89,12 +84,10 @@ class _OtpPageState extends State<OtpPage> {
                   const SizedBox(
                     height: 12,
                   ),
-                  CommonTextViewWidget(
-                    text:
-                        "We have sent verification code to your registered Phone.",
-                    align: TextAlign.center,
-                    fontSize: 16,
-                    color: colorPrimary,
+                  const Text(
+                    "We have sent verification code to your registered Phone.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: primaryColor),
                   ),
                   const SizedBox(
                     height: 12,
@@ -102,12 +95,7 @@ class _OtpPageState extends State<OtpPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CommonTextViewWidget(
-                        text: widget.mobile,
-                        fontSize: 16,
-                        color: colorSecondary,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      Text( widget.mobile,style: const TextStyle(fontSize: 16,color: Colors.black),),
                       const SizedBox(
                         width: 10,
                       ),
@@ -120,77 +108,14 @@ class _OtpPageState extends State<OtpPage> {
                     ],
                   ),
                   SizedBox(height: context.height * 0.05),
-                  Pinput(
+                  OTPTextField(
                     length: 4,
-                    defaultPinTheme: controller.defaultPinTheme,
-                    hapticFeedbackType: HapticFeedbackType.lightImpact,
-                    pinAnimationType: PinAnimationType.fade,
-                    animationCurve: Curves.linear,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly, // Only allows numbers
-                    ],
-                    onCompleted: (pin) {
-                      setState(() {
-                        otpCode = pin;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        if (value.length < 2) {
-                          otpCode = "";
-                        }
-                      });
-                    },
-                    cursor: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Container(
-                            width: 2,
-                            height: 23,
-                            color: indicatorColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    focusedPinTheme: controller.defaultPinTheme.copyWith(
-                      decoration: controller.defaultPinTheme.decoration!.copyWith(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: colorSecondary),
-                      ),
-                    ),
-                    submittedPinTheme: controller.defaultPinTheme.copyWith(
-                      decoration: controller.defaultPinTheme.decoration!.copyWith(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: colorSecondary),
-                      ),
-                    ),
-                    errorPinTheme: controller.defaultPinTheme.copyBorderWith(
-                      border: Border.all(color: Colors.redAccent),
-                    ),
-                  ),
-                 /* OTPTextField(
-                    length: 4,
-                    otpFieldStyle: AdaptiveTheme.of(context).mode.isDark
-                        ? OtpFieldStyle(
-                            borderColor: white,
-                            enabledBorderColor: white,
-                            focusBorderColor: white,
-                            errorBorderColor: red)
-                        : null,
                     width: context.width,
                     fieldWidth: 55.0,
                     outlineBorderRadius: 7,
                     textFieldAlignment: MainAxisAlignment.spaceAround,
                     fieldStyle: FieldStyle.box,
-                    style: TextStyle(
-                        color: AdaptiveTheme.of(context).mode.isDark
-                            ? Colors.white
-                            : colorSecondary,
-                        fontSize: 16.fSize),
+                    style: const TextStyle(color: Colors.black),
                     onChanged: (pin) {
                       setState(() {
                         if (pin.length < 2) {
@@ -203,8 +128,8 @@ class _OtpPageState extends State<OtpPage> {
                         otpCode = pin;
                       });
                     },
-                  ),*/
-                  SizedBox(height: context.height * 0.05),
+                  ),
+                  const SizedBox(height: 20),
                   RoundedButton(
                       text: "Verify OTP",
                       press: () {
@@ -212,19 +137,18 @@ class _OtpPageState extends State<OtpPage> {
                           UiHelper.showSnakbarMsg(context, "Please enter OTP.");
                           return;
                         } else {
-                          controller.login(
-                              email: "",
-                              phone: widget.mobile,
+                          controller.otpVerify(
                               context: context,
+                              mobile: widget.mobile,
                               otp: otpCode);
                         }
                       }),
                   SizedBox(height: context.height * 0.03),
                   Center(
                       child: isTimerIsRunning
-                          ? CommonTextViewWidget(
+                          ? RegularTextDarkMode(
                               text: '${"Resend In"} $_start ${"Seconds"}',
-                              fontSize: 14)
+                              textSize: 14)
                           : resentOTPWidget(context)),
                   SizedBox(height: context.height * 0.03),
                   const SizedBox(height: 20),
@@ -234,10 +158,8 @@ class _OtpPageState extends State<OtpPage> {
           ),
           Align(
             alignment: Alignment.center,
-            child: Obx(() => controller.loading.value ||
-                    authenticationController.loading.value
-                ? const Loading()
-                : const SizedBox()),
+            child:
+                Obx(() => controller.loading.value || authenticationController.loading.value ? const Loading() : const SizedBox()),
           )
         ],
       ),
@@ -268,20 +190,23 @@ class _OtpPageState extends State<OtpPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        CommonTextViewWidget(
+        const RegularTextDarkMode(
           text: "Don’t Receive the Code?",
         ),
         GestureDetector(
           onTap: () async {
-            controller.sendOtp(context: context, mobile: widget.mobile);
+            authenticationController.sendOtp(
+                context: context, mobile: widget.mobile);
             _start = 60;
             startTimer();
           },
-          child: CommonTextViewWidget(
-            text: "Resend OTP",
-            linethrough: TextDecoration.underline,
-            color: colorPrimary,
-            fontWeight: FontWeight.bold,
+          child: const Text(
+            "Resend OTP",
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+              color: primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
