@@ -139,7 +139,7 @@ class UseCoupons extends GetView<PaymentController> {
                                         strokeWidth: 1,
                                         radius: Radius.circular(16),
                                         color: purpleColor,
-                                        padding: EdgeInsets.all(16),
+                                        padding: EdgeInsets.all(6),
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.only(

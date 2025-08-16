@@ -91,7 +91,7 @@ dependencies:
     pinput:
     focused_menu:
     skeletons:
-        path: packages/skeletons-master
+         path: packages/skeletons-master
     cupertino_icons: ^1.0.2
     google_sign_in: ^5.1.0
     test:
