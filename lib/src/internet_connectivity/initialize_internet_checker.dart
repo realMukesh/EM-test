@@ -6,20 +6,30 @@ import 'navigation_Service.dart';
 
 class InternetChecker {
   InternetChecker({Widget? page, GlobalKey<NavigatorState>? navigationKey,required BuildContext ctx}) {
-    InternetConnectionChecker().onStatusChange.listen((status) {
-      switch (status) {
-        case InternetConnectionStatus.connected:
-          if (IndexClass.index == 1) {
-            IndexClass.index = 0;
-            NavigationService.popScreen(navigationKey: navigationKey,context: ctx);
-          }
-          break;
-        case InternetConnectionStatus.disconnected:
-          IndexClass.index = 1;
-          NavigationService.navigateTo(
-              page: page, navigationKey: navigationKey,ctx: ctx);
-          break;
-      }
-    });
+
+    final connectionChecker = InternetConnectionChecker.instance;
+    final subscription = connectionChecker.onStatusChange.listen(
+          (InternetConnectionStatus status) {
+            switch (status) {
+              case InternetConnectionStatus.connected:
+                if (IndexClass.index == 1) {
+                  IndexClass.index = 0;
+                  NavigationService.popScreen(navigationKey: navigationKey,context: ctx);
+                }
+                break;
+              case InternetConnectionStatus.disconnected:
+                IndexClass.index = 1;
+                NavigationService.navigateTo(
+                    page: page, navigationKey: navigationKey,ctx: ctx);
+                break;
+              case InternetConnectionStatus.slow:
+                // TODO: Handle this case.
+                throw UnimplementedError();
+            }
+      },
+    );
+
+    // Remember to cancel the subscription when it's no longer needed
+    subscription.cancel();
   }
 }

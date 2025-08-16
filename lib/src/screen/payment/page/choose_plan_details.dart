@@ -458,17 +458,20 @@ class _ChoosePlanDetailsState extends State<ChoosePlanDetails> {
                 children: [
                   _controller.planDetails.value.list![index].discount != 0
                       ? DottedBorder(
-                          borderType: BorderType.RRect,
-                          dashPattern: const [3, 3],
-                          color: primaryColor,
-                          strokeWidth: 1,
+                          options: RoundedRectDottedBorderOptions(
+                            dashPattern: [3, 3],
+                            strokeWidth: 1,
+                            radius: Radius.circular(16),
+                            color: purpleColor,
+                            padding: EdgeInsets.all(0),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.only(
                                 top: 3.0, bottom: 3, left: 10, right: 10),
                             child: RegularTextDarkMode(
                               text:
                                   "${_controller.planDetails.value.list![index].discount}% OFF",
-                              color:primaryColor,
+                              color: primaryColor,
                             ),
                           ))
                       : const SizedBox(),
@@ -479,6 +482,8 @@ class _ChoosePlanDetailsState extends State<ChoosePlanDetails> {
               ),
             ),
             Positioned(
+              bottom: 0,
+              right: 0,
               child: SizedBox(
                 width: 150,
                 child: Row(
@@ -504,8 +509,6 @@ class _ChoosePlanDetailsState extends State<ChoosePlanDetails> {
                   ],
                 ),
               ),
-              bottom: 0,
-              right: 0,
             ),
           ],
         ),

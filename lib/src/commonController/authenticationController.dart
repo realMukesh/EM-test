@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import '../../resrc/helper/fcm/push_notification_service.dart';
 import '../auth/login/model/login_model.dart';
 import '../auth/login/model/new_usermodel.dart';
@@ -51,9 +50,9 @@ class AuthenticationManager extends GetxController with CacheManager {
     googleSignIn.signOut();
     loading(false);
   }
-  late FirebaseMessaging _firebaseMessaging;
-  Rx<bool>loading=false.obs;
 
+  late FirebaseMessaging _firebaseMessaging;
+  Rx<bool> loading = false.obs;
 
   @override
   void onInit() {
@@ -129,7 +128,7 @@ class AuthenticationManager extends GetxController with CacheManager {
     Map requestBody = {
       "phone": phone,
       "email": email,
-      "deviceID": (await PlatformDeviceId.getDeviceId),
+      "deviceID": await UiHelper.getDeviceId(),
       "deviceToken": getFcmToken() ?? tempToken,
       "deviceType": Platform.isAndroid ? "Android" : "IOS",
     };
@@ -159,11 +158,12 @@ class AuthenticationManager extends GetxController with CacheManager {
       return;
     }
   }
+
   void initServices() {
-    Get.put<AuthenticationManager>(AuthenticationManager(),
-        permanent: true);
+    Get.put<AuthenticationManager>(AuthenticationManager(), permanent: true);
     Get.putAsync<ApiService>(() => ApiService().init());
   }
+
   final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 
   ///finding device type

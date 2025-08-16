@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:english_madhyam/resrc/widgets/regularTextView.dart';
 
 
@@ -21,6 +24,21 @@ class UiHelper {
 
     return numericRegex.hasMatch(string);
   }
+
+  static Future<String?> getDeviceId() async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.id; // or androidInfo.androidId
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.identifierForVendor;
+    }
+
+    return null;
+  }
+
   static Future<bool> showConfirmDialog({title, content}) async {
     var result = await Get.dialog(AlertDialog(
       title: BoldTextView(

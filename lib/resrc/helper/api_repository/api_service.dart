@@ -28,13 +28,13 @@ import 'package:english_madhyam/resrc/models/model/succes.dart';
 import 'package:english_madhyam/resrc/models/model/updateprofileModel.dart';
 import 'package:english_madhyam/resrc/models/model/video_cat_model.dart';
 import 'package:english_madhyam/resrc/models/model/youtube_list.dart';
+import 'package:english_madhyam/resrc/utils/ui_helper.dart';
 import 'package:english_madhyam/src/screen/category/model/subCategoryModel.dart';
 import 'package:english_madhyam/src/screen/favorite/model/SaveQuestionExamListModel.dart';
 import 'package:english_madhyam/src/screen/favorite/model/save_question_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import '../../../src/commonController/authenticationController.dart';
 import '../../../src/auth/log_out/log_out_model.dart';
 import '../../../src/auth/login/model/login_model.dart';
@@ -589,7 +589,7 @@ class ApiService extends GetxService {
   Future<HomeApiModel?> homeApi() async {
     Map requestBody = {
       "token": _authManager.getToken(),
-      "device_id": (await PlatformDeviceId.getDeviceId)
+      "device_id": await UiHelper.getDeviceId()
     };
 
     final response = await _restClient.postData(

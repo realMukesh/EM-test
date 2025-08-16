@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toastr/flutter_toastr.dart';
@@ -43,8 +42,8 @@ class _ConnectivityScreenState extends State<ConnectivityScreen> {
                       setState(() {
                         hasInternet = true;
                       });
-                      bool result =
-                          await InternetConnectionChecker().hasConnection;
+                      final bool result = await InternetConnectionChecker
+                          .instance.hasConnection;
                       if (result == true) {
                         FlutterToastr.show(
                           "Internet is Back :( 🐣",

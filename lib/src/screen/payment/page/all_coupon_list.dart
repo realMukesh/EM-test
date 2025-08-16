@@ -1,3 +1,5 @@
+import 'dart:ui' as BorderType;
+
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
 import 'package:english_madhyam/src/screen/payment/controller/paymentController.dart';
 import 'package:english_madhyam/src/utils/colors/colors.dart';
@@ -160,10 +162,13 @@ class _UseCouponsState extends State<UseCoupons> {
                                     height: 10,
                                   ),
                                   DottedBorder(
-                                      borderType: BorderType.RRect,
-                                      dashPattern: const [3, 3],
-                                      color: purpleColor,
-                                      strokeWidth: 1,
+                                      options: RoundedRectDottedBorderOptions(
+                                        dashPattern: [3, 3],
+                                        strokeWidth: 1,
+                                        radius: Radius.circular(16),
+                                        color: purpleColor,
+                                        padding: EdgeInsets.all(16),
+                                      ),
                                       child: Padding(
                                         padding: const EdgeInsets.only(
                                             top: 3.0,

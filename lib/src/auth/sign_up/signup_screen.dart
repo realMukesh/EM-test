@@ -9,7 +9,6 @@ import 'package:english_madhyam/src/utils/custom_roboto/custom_roboto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
@@ -369,7 +368,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 "email": widget.email != null && widget.email!.isNotEmpty
                                     ? widget.email!
                                     : emailController.text.trim(),
-                                "deviceID": (await PlatformDeviceId.getDeviceId),
+                                "deviceID": await UiHelper.getDeviceId(),
                                 "deviceToken": authenticationController.getFcmToken(),
                                 "deviceType": Platform.isAndroid ? "Android" : "IOS",
                               };

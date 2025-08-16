@@ -188,9 +188,22 @@ class _MaterialSubCategoryPageState extends State<MaterialSubCategoryPage>
     }
   }
 
+  List<String> color = [
+    "#DBDDFF",
+    "#FFDDDD",
+    "#F5E8FF",
+  ];
+
   @override
   void initState() {
     super.initState();
+    tabController = TabController(length: 2, vsync: this);
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      initiizeTheData();
+    });
+  }
+
+  initiizeTheData() {
     _catEditorialContr.editorialByCat.clear();
     _catEditorialContr.categoryId(int.parse(widget.catid));
 
@@ -205,7 +218,6 @@ class _MaterialSubCategoryPageState extends State<MaterialSubCategoryPage>
 
     _permissionReady = false;
 
-    tabController = TabController(length: 2, vsync: this);
     if (tabController.index == 0) {
       _catEditorialContr.getTask(1, int.parse(widget.catid));
     }
@@ -215,12 +227,6 @@ class _MaterialSubCategoryPageState extends State<MaterialSubCategoryPage>
       }
     });
   }
-
-  List<String> color = [
-    "#DBDDFF",
-    "#FFDDDD",
-    "#F5E8FF",
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -435,7 +441,7 @@ class _MaterialSubCategoryPageState extends State<MaterialSubCategoryPage>
           //unselectedLabelColor: blackColor,
           indicatorSize: TabBarIndicatorSize.label,
           controller: tabController,
-          labelColor: Colors.black,
+          labelColor: Colors.white,
           dividerColor: Colors.transparent,
           indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(50), color: purpleColor),

@@ -17,7 +17,7 @@ class Achieverstake extends StatefulWidget {
 }
 
 class _AchieverstakeState extends State<Achieverstake> {
-  final CarouselController _sliderController = CarouselController();
+  final CarouselSliderController _sliderController = CarouselSliderController();
   int _current = 0;
 
   @override
@@ -45,8 +45,11 @@ class _AchieverstakeState extends State<Achieverstake> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SemiBoldTextView(text: "Our Achievers Take",textSize: 22,
-                  weight: FontWeight.w700,),
+                SemiBoldTextView(
+                  text: "Our Achievers Take",
+                  textSize: 22,
+                  weight: FontWeight.w700,
+                ),
                 const SizedBox(
                   height: 15,
                 ),
@@ -64,31 +67,40 @@ class _AchieverstakeState extends State<Achieverstake> {
                   height: 15,
                 ),
                 Flexible(
-                  child: SemiBoldTextView(text:
-                    (item.userName).toString(),textSize: 18,
-                    textAlign: TextAlign.center,weight: FontWeight.w500,
+                  child: SemiBoldTextView(
+                    text: (item.userName).toString(),
+                    textSize: 18,
+                    textAlign: TextAlign.center,
+                    weight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(
                   height: 5,
                 ),
                 Flexible(
-                  child:SemiBoldTextView(text:
-                  item.exam_name == null ? "" : item.exam_name.toString(),textSize: 18,
-                    textAlign: TextAlign.center,weight: FontWeight.w600,
+                  child: SemiBoldTextView(
+                    text:
+                        item.exam_name == null ? "" : item.exam_name.toString(),
+                    textSize: 18,
+                    textAlign: TextAlign.center,
+                    weight: FontWeight.w600,
                   ),
                 ),
                 Divider(
                   color: greyColor,
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     UiHelper.showINfoDialog(item.description ?? "");
                   },
                   child: Html(
-                    data: item.description ?? "",style: {
-                    "p": Style(fontSize: FontSize(14.0),textAlign: TextAlign.justify,maxLines: 5)
-                  },
+                    data: item.description ?? "",
+                    style: {
+                      "p": Style(
+                          fontSize: FontSize(14.0),
+                          textAlign: TextAlign.justify,
+                          maxLines: 5)
+                    },
                   ),
                 )
               ],

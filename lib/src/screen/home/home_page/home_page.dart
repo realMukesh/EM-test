@@ -41,7 +41,8 @@ class _HomePageState extends State<HomePage> {
   final HomeController homeController = Get.find();
   final ProfileControllers _profile = Get.put(ProfileControllers());
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final CarouselController _sliderController = CarouselController();
+  final CarouselSliderController _sliderController = CarouselSliderController();
+
   final NotifcationController _notifcationController = Get.find();
 
   String? name;
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RegularTextView(
-                text: "Hi," + name.toString(),
+                text: "Hi,$name",
               ),
               RegularTextView(
                 text: homeController.greeting.value,
