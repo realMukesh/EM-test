@@ -134,10 +134,13 @@ class UseCoupons extends GetView<PaymentController> {
                                     height: 10,
                                   ),
                                   DottedBorder(
-                                      borderType: BorderType.RRect,
-                                      dashPattern: const [3, 3],
-                                      color: purpleColor,
-                                      strokeWidth: 1,
+                                      options: RoundedRectDottedBorderOptions(
+                                        dashPattern: [3, 3],
+                                        strokeWidth: 1,
+                                        radius: Radius.circular(16),
+                                        color: purpleColor,
+                                        padding: EdgeInsets.all(16),
+                                      ),
                                       child: Padding(
                                         padding: const EdgeInsets.only(
                                             top: 3.0,

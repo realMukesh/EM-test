@@ -1,22 +1,12 @@
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:english_madhyam/utils/ui_helper.dart';
-import 'package:english_madhyam/restApi/api_service.dart';
 import 'package:english_madhyam/storage/cache_manager.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import '../../fcm/push_notification_service.dart';
-import '../screen/login/model/login_model.dart';
-import '../screen/login/model/new_usermodel.dart';
-import '../auth/otp/otp_page.dart';
-import '../auth/sign_up/signup_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../screen/bottom_nav/dashboard_page.dart';
-import '../screen/savedQuestion/model/SaveQuestionExamListModel.dart';
 import '../screen/savedQuestion/model/save_question_model.dart';
 import '../setting/page/DarkThemePreference.dart';
 

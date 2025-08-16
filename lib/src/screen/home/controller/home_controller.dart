@@ -9,9 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:english_madhyam/restApi/api_service.dart';
-
 import '../../../widgets/common_textview_widget.dart';
 import '../../Notification_screen/controller/notification_controller.dart';
 import '../../bottom_nav/controller/dashboard_controller.dart';
@@ -30,7 +28,8 @@ class HomeController extends GetxController {
   final AuthenticationManager authController = Get.find();
   final ProfileControllers profileControllers = Get.find();
   final DashboardController dashboardController = Get.find();
-  final CarouselController sliderController = CarouselController();
+
+  CarouselSliderController sliderController = CarouselSliderController();
   final NotifcationController notficationController = Get.find();
 
   GlobalKey<NavigatorState>? NavigationKey;

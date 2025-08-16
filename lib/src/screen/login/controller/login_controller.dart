@@ -8,8 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pinput/pinput.dart';
-import 'package:platform_device_id/platform_device_id.dart';
-
 import '../../../../restApi/api_service.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/ui_helper.dart';
@@ -73,7 +71,7 @@ class LoginController extends GetxController {
       "phone": phone,
       "email": email,
       "otp": otp,
-      "deviceID": (await PlatformDeviceId.getDeviceId) ?? "",
+      "deviceID": await UiHelper.getDeviceId() ?? "",
       "deviceToken": authenticationManager.getFcmToken() ?? "3211",
       "deviceType": Platform.isAndroid ? "Android" : "IOS",
     };

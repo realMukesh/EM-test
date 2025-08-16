@@ -1,10 +1,16 @@
 import 'package:flutter/cupertino.dart';
-
-import '../model/youtube_list.dart';
-import 'package:english_madhyam/utils/app_colors.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import '../../../../utils/app_colors.dart';
+import '../../../player/src/player/youtube_player.dart';
+import '../../../player/src/utils/youtube_player_controller.dart';
+import '../../../player/src/utils/youtube_player_flags.dart';
+import '../../../player/src/widgets/progress_bar.dart';
+import '../../../utils/colors/colors.dart';
+import '../model/youtube_list.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final int index;
@@ -23,40 +29,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   void initState() {
-    // controller = PodPlayerController(
-    //
-    //
-    //   playVideoFrom: PlayVideoFrom.youtube(widget.video.videos![widget.index].videoId.toString()),
-    //   // playVideoFrom: PlayVideoFrom.youtube("A3ltMaM6noM",),
-    //   // playVideoFrom: PlayVideoFrom.network("https://www.youtube.com/watch?v=8O2absyUlN8",),
-    //   // playVideoFrom: PlayVideoFrom.networkQualityUrls(videoUrls: [VideoQalityUrls(quality: 360, url: "https://www.youtube.com/watch?v=8O2absyUlN8")]),
-    //
-    //
-    //   // podPlayerConfig:const  PodPlayerConfig(
-    //   //
-    //   //   isLooping: false,
-    //   //   autoPlay: false,
-    //   //
-    //   // ),
-    //     podPlayerConfig: const PodPlayerConfig(
-    //         autoPlay: true,
-    //         isLooping: false,
-    //         videoQualityPriority: [720, 360]
-    //     )
-    // )..initialise().onError((error, stackTrace) {
-    //   print("Error: $error");
-    //   setState(() {
-    //     isSecondaryPlayer=true;
-    //   });
     youtubePlayerIntialize();
-    // });
-
     super.initState();
   }
 
   youtubePlayerIntialize() {
     _controller = YoutubePlayerController(
-      initialVideoId: widget.video.videos![widget.index].videoId!.toString(),
+      initialVideoId: widget.video.videos![widget.index].videoId.toString(),
       flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
@@ -68,45 +47,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         loop: false,
       ),
     );
-//   _controller = YoutubePlayerController(
-//
-//     params: const YoutubePlayerParams(
-//       showControls: true,
-//
-//
-//       mute: false,
-//
-//       showFullscreenButton: true,
-//
-//
-//       loop: false,
-//
-//     ),
-//
-//
-//
-//   );
-// _controller!.enterFullScreen(lock: false);
-//
-//   _controller!.setFullScreenListener(
-//         (isFullScreen) {
-//       log('${isFullScreen ? 'Entered' : 'Exited'} Fullscreen.');
-//     },
-//   );
-//
-//   if (widget.video.videos![widget.index].videoId != null) {
-//     _controller?.loadVideoById(videoId:widget.video.videos![widget.index].videoId!);
-//   }
-// else{
-//   Fluttertoast.showToast(msg: "Video not available");
-//   }
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     _controller!.dispose();
-
     super.dispose();
   }
 
@@ -141,91 +87,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               ),
             ),
           ),
-        )
-        // child: YoutubePlayerScaffold(
-        //
-        //   controller: _controller!,
-        //
-        //   aspectRatio: 16 / 9,
-        //   enableFullScreenOnVerticalDrag: false,
-        //
-        //
-        //
-        //   autoFullScreen: true,
-        //   builder: (context, player) {
-        //     return Scaffold(
-        //       appBar: AppBar(
-        //         title:  Text(widget.video.videos![widget.index].title??""),
-        //       ),
-        //       body: LayoutBuilder(
-        //         builder: (context, constraints) {
-        //           if (kIsWeb && constraints.maxWidth > 750) {
-        //             return Row(
-        //               crossAxisAlignment: CrossAxisAlignment.start,
-        //               children: [
-        //                 Expanded(
-        //                   flex: 3,
-        //                   child: Column(
-        //                     children: [
-        //                       player,
-        //                       const VideoPositionIndicator(),
-        //                     ],
-        //                   ),
-        //                 ),
-        //                 const Expanded(
-        //                   flex: 2,
-        //                   child: SingleChildScrollView(
-        //                     child: Controls(),
-        //                   ),
-        //                 ),
-        //               ],
-        //             );
-        //           }
-        //
-        //           return ListView(
-        //             children: [
-        //               player,
-        //               const VideoPositionIndicator(),
-        //               const Controls(),
-        //             ],
-        //           );
-        //         },
-        //       ),
-        //     );
-        //   },
-        // ),
-        );
-    // return Scaffold(
-    //   body:
-    //
-    // Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         Padding(
-    //           padding: const EdgeInsets.all(8.0),
-    //           child: Text("English Madhyam",style: TextStyle(color: purpleColor,fontSize: 16,fontWeight: FontWeight.w700),),
-    //         ),
-    //         YoutubePlayer(
-    //
-    //          controller: _controller!,
-    //
-    //          showVideoProgressIndicator: true,
-    //          progressIndicatorColor: Colors.amber,
-    //
-    //          progressColors: const ProgressBarColors(
-    //            playedColor: Colors.amber,
-    //            handleColor: Colors.amberAccent,
-    //          ),
-    //          onReady: () {
-    //            // _controller!.addListener(listener);
-    //          },
-    //              ),
-    //       ],
-    //     ),
-    //   ),
-    // );
+        ));
   }
 
   Widget forwardSeek() {
@@ -235,7 +97,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       child: Container(
         color: Colors.black,
         child: IconButton(
-          icon: Icon(Icons.forward_10, color: Colors.white),
+          icon: const Icon(Icons.forward_10, color: Colors.white),
           onPressed: () {
             _controller!.seekTo(
                 _controller!.value.position + const Duration(seconds: 10));
@@ -249,13 +111,60 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     return Container(
       color: Colors.black,
       child: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.replay_10,
           color: Colors.white,
         ),
         onPressed: () {
           _controller!.seekTo(
               _controller!.value.position - const Duration(seconds: 10));
+        },
+      ),
+    );
+  }
+
+  Widget _buildVideo({required String videoId}) {
+    final embedUrl =
+        "https://www.youtube.com/embed/$videoId?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1&controls=1";
+    return Container(
+      height: 200,
+      width: 200,
+      child: InAppWebView(
+        initialUrlRequest: URLRequest(url: WebUri(embedUrl)),
+        onEnterFullscreen: (controller) async {
+          await SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+            DeviceOrientation.landscapeRight,
+            DeviceOrientation.landscapeLeft,
+          ]);
+        },
+        onExitFullscreen: (controller) async {
+          await SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitDown,
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.landscapeRight,
+            DeviceOrientation.landscapeLeft,
+          ]);
+        },
+        initialOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(
+            mediaPlaybackRequiresUserGesture: false,
+          ),
+          android: AndroidInAppWebViewOptions(
+            useHybridComposition: true, // safe option
+          ),
+          ios: IOSInAppWebViewOptions(
+            allowsInlineMediaPlayback: true,
+          ),
+        ),
+        androidOnPermissionRequest: (controller, origin, resources) async {
+          await Permission.camera.request();
+          await Permission.microphone.request();
+          return PermissionRequestResponse(
+            resources: resources,
+            action: PermissionRequestResponseAction.GRANT,
+          );
         },
       ),
     );

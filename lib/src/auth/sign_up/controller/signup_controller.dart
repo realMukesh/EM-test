@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:english_madhyam/restApi/api_service.dart';
 import 'package:english_madhyam/utils/ui_helper.dart';
 import 'package:english_madhyam/src/commonController/authenticationController.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import '../../../screen/bottom_nav/dashboard_page.dart';
 import '../../otp/send_otp_model/send_otp.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

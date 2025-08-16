@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
@@ -12,8 +12,8 @@ import '../src/screen/login/page/login_page.dart';
 import 'exceptions.dart';
 
 var options = BaseOptions(
-  connectTimeout: 30000,
-  receiveTimeout: 30000,
+  connectTimeout: Duration(milliseconds: 30000),
+  receiveTimeout: Duration(milliseconds: 30000),
 );
 
 class RestClient {
@@ -213,25 +213,6 @@ class RestClient {
       default:
         throw HttpException(
             statusCode: response.statusCode, message: "Something went wrong");
-    }
-  }
-
-  _dioException(DioError dioErr) {
-    switch (dioErr.type) {
-      case DioErrorType.response:
-        throw _processResponse(dioErr.response);
-      case DioErrorType.sendTimeout:
-        throw HttpException(
-            statusCode: dioErr.response?.statusCode,
-            message: "Something went wrong");
-      case DioErrorType.receiveTimeout:
-        throw HttpException(
-            statusCode: dioErr.response?.statusCode,
-            message: "Something went wrong");
-      default:
-        throw HttpException(
-            statusCode: dioErr.response?.statusCode,
-            message: "Something went wrong");
     }
   }
 }

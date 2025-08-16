@@ -61,10 +61,13 @@ class PlanWidget extends GetView<PaymentController> {
                 children: [
                   planData.discount != 0
                       ? DottedBorder(
-                      borderType: BorderType.RRect,
-                      dashPattern: const [3, 3],
-                      color: primaryColor,
-                      strokeWidth: 1,
+                      options: RoundedRectDottedBorderOptions(
+                        dashPattern: [3, 3],
+                        strokeWidth: 1,
+                        radius: Radius.circular(16),
+                        color: purpleColor,
+                        padding: EdgeInsets.all(16),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.only(
                             top: 3.0, bottom: 3, left: 10, right: 10),

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:english_madhyam/utils/app_colors.dart';
 import 'package:english_madhyam/utils/size_utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +14,21 @@ import '../src/screen/pages/page/setup.dart';
 import '../src/widgets/common_textview_widget.dart';
 
 class UiHelper {
+
+
+  static Future<String?> getDeviceId() async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      final androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.id; // or androidInfo.androidId
+    } else if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.identifierForVendor;
+    }
+
+    return null;
+  }
 
   static List<String> backgroundColors= [
     "#DBDDFF",
