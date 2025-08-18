@@ -43,9 +43,13 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
+
   /// pdf download initialization
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  final android =  AndroidInitializationSettings('@mipmap/logo_round');
+  final android = AndroidInitializationSettings('@mipmap/logo_round');
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: SystemUiOverlay.values);
 
   if (Platform.isAndroid) {
     final initSettings = InitializationSettings(android: android);
@@ -93,16 +97,18 @@ void main() async {
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(MyApp(savedThemeMode: savedThemeMode));
 }
+
 @pragma('vm:entry-point')
 Future<void> backgroundHandler(RemoteMessage message) async {
-  if(message.notification!=null){
+  if (message.notification != null) {
     await AwesomeNotifications().createNotificationFromJsonData(message.data);
   }
 }
 
 void initServices() {
-  Get.put<AuthenticationManager>(AuthenticationManager(),
-     );
+  Get.put<AuthenticationManager>(
+    AuthenticationManager(),
+  );
   Get.putAsync<ApiService>(() => ApiService().init());
 }
 
@@ -137,4 +143,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -33,10 +33,10 @@ class PlayQuizPage extends StatefulWidget {
 
   const PlayQuizPage(
       {Key? key,
-      required this.title,
-      required this.type,
-      required this.examDetails,
-      required this.reviewExam})
+        required this.title,
+        required this.type,
+        required this.examDetails,
+        required this.reviewExam})
       : super(key: key);
 
   @override
@@ -46,9 +46,9 @@ class PlayQuizPage extends StatefulWidget {
 class _PlayQuizPageState extends State<PlayQuizPage> {
   TextEditingController reportQuestionController = TextEditingController();
   final SubmitExamController _submitExamController =
-      Get.put(SubmitExamController());
+  Get.put(SubmitExamController());
   final PraticeExamDetailController _quizDetailsController =
-      Get.put(PraticeExamDetailController());
+  Get.put(PraticeExamDetailController());
   final HtmlConverter _htmlConverter = HtmlConverter();
   final FavoriteController _favoriteController = Get.find();
   final ProfileControllers _profileControllers = Get.find();
@@ -94,47 +94,49 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //backgroundColor: whiteColor,
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
         //backgroundColor: whiteColor,
-        centerTitle: false,
-        //automaticallyImplyLeading: false,
-        elevation: 0.0,
-        title: const ToolbarTitle(
-          title: 'Play Exam',
+        appBar: AppBar(
+          //backgroundColor: whiteColor,
+          centerTitle: false,
+          //automaticallyImplyLeading: false,
+          elevation: 0.0,
+          title: const ToolbarTitle(
+            title: 'Play Exam',
+          ),
         ),
-      ),
-      body: WillPopScope(
-        onWillPop: exitDialog,
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  indicateMarks(),
-                  saveRow(),
-                  headerTimerWidget(),
-                  questionWidget(),
-                  optionsWidget(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                  ),
-                ],
+        body: WillPopScope(
+          onWillPop: exitDialog,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    indicateMarks(),
+                    saveRow(),
+                    headerTimerWidget(),
+                    questionWidget(),
+                    optionsWidget(),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.2,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: bottomButtons(),
-            ),
-            Obx(() => _quizDetailsController.loadingQuestion.value||_quizDetailsController.loading.value||_submitExamController.loading.value
-                ? const Loading()
-                : const SizedBox())
-          ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: bottomButtons(),
+              ),
+              Obx(() => _quizDetailsController.loadingQuestion.value||_quizDetailsController.loading.value||_submitExamController.loading.value
+                  ? const Loading()
+                  : const SizedBox())
+            ],
+          ),
         ),
+        endDrawer: endDrawerWidget(),
       ),
-      endDrawer: endDrawerWidget(),
     );
   }
 
@@ -206,8 +208,8 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
         selectedOption = _examQuestion[questionIndex].options![optionIndex].id!;
         _examQuestion[selectedQuestion].isSelect = selectedOption;
         selectedOptionIndex = optionIndex;
-          _examQuestion[selectedQuestion].isAttempt = 1;
-          _examQuestion[selectedQuestion].ansType = 1;
+        _examQuestion[selectedQuestion].isAttempt = 1;
+        _examQuestion[selectedQuestion].ansType = 1;
 
 
         print(
@@ -263,8 +265,8 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
         // if option is selected
         if (selectedOption != 0) {
           if (_examQuestion[selectedQuestion]
-                  .options![selectedOptionIndex]
-                  .id ==
+              .options![selectedOptionIndex]
+              .id ==
               int.parse(option)) {
             setState(() {
               // _examQuestion[selectedQuestion].isSelect = int.parse(option);
@@ -405,7 +407,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
       const Duration(
         seconds: 1,
       ),
-      (Timer timer) {
+          (Timer timer) {
         // print(_remainingTime.toString()+"REMAINING TIME");
         if (_remainingTime == 0) {
           timer.cancel();
@@ -470,7 +472,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
           availableOptions.contains(element.isSelect)==false) {
         Fluttertoast.showToast(
             msg:
-                "Please select your answer for question number ${i + 1} again.");
+            "Please select your answer for question number ${i + 1} again.");
         selectedQuestion = i;
         goToQuestion(i);
         removeAnswer(selectedQuestion);
@@ -585,90 +587,90 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
               ),
               type == "Pause"
                   ? InkWell(
-                      onTap: () async {
-                        pauseTimer();
-                        var result = await _quizDetailsController.pauseExam(
-                            id: examId,
-                            left: _remainingTime,
-                            listData:
-                                widget.examDetails.content!.examQuestion ?? []);
-                        print("aaa--now is back");
-                        Future.delayed(const Duration(seconds: 0), () {
-                          Navigator.pop(context, result);
-                        });
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          decoration: BoxDecoration(
-                              color: purpleColor,
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Obx(() {
-                            if (_quizDetailsController.loading.value) {
-                              return Center(
-                                child: Lottie.asset(
-                                    "assets/animations/loader.json",
-                                    height: MediaQuery.of(context).size.height *
-                                        0.05),
-                              );
-                            } else {
-                              return Text(
-                                _quizDetailsController.pauseMessage.value ==
-                                            "resume" ||
-                                        _quizDetailsController
-                                                .pauseMessage.value ==
-                                            ""
-                                    ? "Pause"
-                                    : "Resume",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.white),
-                              );
-                            }
-                          })))
+                  onTap: () async {
+                    pauseTimer();
+                    var result = await _quizDetailsController.pauseExam(
+                        id: examId,
+                        left: _remainingTime,
+                        listData:
+                        widget.examDetails.content!.examQuestion ?? []);
+                    print("aaa--now is back");
+                    Future.delayed(const Duration(seconds: 0), () {
+                      Navigator.pop(context, result);
+                    });
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      decoration: BoxDecoration(
+                          color: purpleColor,
+                          borderRadius: BorderRadius.circular(100)),
+                      child: Obx(() {
+                        if (_quizDetailsController.loading.value) {
+                          return Center(
+                            child: Lottie.asset(
+                                "assets/animations/loader.json",
+                                height: MediaQuery.of(context).size.height *
+                                    0.05),
+                          );
+                        } else {
+                          return Text(
+                            _quizDetailsController.pauseMessage.value ==
+                                "resume" ||
+                                _quizDetailsController
+                                    .pauseMessage.value ==
+                                    ""
+                                ? "Pause"
+                                : "Resume",
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.white),
+                          );
+                        }
+                      })))
                   : InkWell(
-                      onTap: () async {
-                        Navigator.pop(context);
-                        _timer?.cancel();
-                        _submitExamController.submitControl(
-                            id: widget.examDetails.content!.id.toString(),
-                            eid: widget.examDetails.content!.editorialId
-                                .toString(),
-                            title: widget.title,
-                            catId: widget.examDetails.content!.categoryId
-                                .toString(),
-                            data: jsonEncode(
-                                widget.examDetails.content!.examQuestion),
-                            route: widget.type,
-                            time: _remainingTime.toString());
-                      },
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          decoration: BoxDecoration(
-                              color: purpleColor,
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Obx(() {
-                            if (_submitExamController.loading.value) {
-                              return Center(
-                                child: Lottie.asset(
-                                  "assets/animations/loader.json",
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                ),
-                              );
-                            } else {
-                              return const Text(
-                                "SUBMIT",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.white),
-                              );
-                            }
-                          })),
-                    )
+                onTap: () async {
+                  Navigator.pop(context);
+                  _timer?.cancel();
+                  _submitExamController.submitControl(
+                      id: widget.examDetails.content!.id.toString(),
+                      eid: widget.examDetails.content!.editorialId
+                          .toString(),
+                      title: widget.title,
+                      catId: widget.examDetails.content!.categoryId
+                          .toString(),
+                      data: jsonEncode(
+                          widget.examDetails.content!.examQuestion),
+                      route: widget.type,
+                      time: _remainingTime.toString());
+                },
+                child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    decoration: BoxDecoration(
+                        color: purpleColor,
+                        borderRadius: BorderRadius.circular(100)),
+                    child: Obx(() {
+                      if (_submitExamController.loading.value) {
+                        return Center(
+                          child: Lottie.asset(
+                            "assets/animations/loader.json",
+                            height:
+                            MediaQuery.of(context).size.height * 0.04,
+                          ),
+                        );
+                      } else {
+                        return const Text(
+                          "SUBMIT",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white),
+                        );
+                      }
+                    })),
+              )
             ]),
           ),
         ),
@@ -747,7 +749,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                             side: BorderSide(color: purpleColor, width: 1),
                             shape: const RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
+                                BorderRadius.all(Radius.circular(10))),
                           ),
                           onPressed: () {
                             _openSubmitDialog(type: "Submit");
@@ -866,7 +868,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
             child: Container(
               width: 100,
               padding:
-                  const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
+              const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   border: Border.all(
@@ -993,7 +995,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                 // minLines: null,
                 decoration: InputDecoration(
                   hintText:
-                      "Please Tell us more about the issue (at least 7-8 words) for the quick resolutions",
+                  "Please Tell us more about the issue (at least 7-8 words) for the quick resolutions",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -1053,7 +1055,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                       return Icon(
                         // Icons.play_arrow_rounded,
                         _quizDetailsController.pauseMessage.value == "resume" ||
-                                _quizDetailsController.pauseMessage.value == ""
+                            _quizDetailsController.pauseMessage.value == ""
                             ? Icons.pause_circle_outline_outlined
                             : Icons.play_arrow_rounded,
                         color: Colors.indigo,
@@ -1084,7 +1086,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5, crossAxisSpacing: 1),
       children:
-          List.generate(widget.examDetails.content!.examQuestion!.length, (i) {
+      List.generate(widget.examDetails.content!.examQuestion!.length, (i) {
         return Container(
           padding: const EdgeInsets.all(5),
           width: 40,
@@ -1119,10 +1121,10 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
               (i != selectedQuestion)
                   ? Container()
                   : Divider(
-                      color: greyColor,
-                      height: 10,
-                      thickness: 2,
-                    )
+                color: greyColor,
+                height: 10,
+                thickness: 2,
+              )
             ],
           ),
         );
@@ -1140,75 +1142,75 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
   Widget optionsWidget() {
     return widget.reviewExam == false
         ? Container(
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: List.generate(
-                    _examQuestion[selectedQuestion].options!.length, (j) {
-                  return InkWell(
-                    onTap: () {
-                      if (_quizDetailsController.loadingQuestion.value) {
-                        return;
-                      }
+        margin: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(left: 5, right: 5),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: List.generate(
+                _examQuestion[selectedQuestion].options!.length, (j) {
+              return InkWell(
+                onTap: () {
+                  if (_quizDetailsController.loadingQuestion.value) {
+                    return;
+                  }
 
-                      giveAnswer(selectedQuestion, j);
-                    },
-                    child: Container(
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                /// check wheter selected option is selected or not
-                                color: (_examQuestion[selectedQuestion]
-                                            .options![j]
-                                            .id ==
-                                    _examQuestion[selectedQuestion].isSelect)
-                                    ? greenColor
-                                    : Colors.grey,
-                                offset: const Offset(0.0, 1.0), //(x,y)
-                                blurRadius: 4.0,
-                              ),
-                            ],
-                            border: Border.all(
-                                color: (_examQuestion[selectedQuestion]
-                                            .options![j]
-                                            .id ==
-                                    _examQuestion[selectedQuestion].isSelect)
-                                    ? greenColor
-                                    : whiteColor,
-                                width: 2),
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        padding: const EdgeInsets.only(
-                            left: 10, top: 5, bottom: 5, right: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: whiteColor,
-                                  borderRadius: BorderRadius.circular(50)),
-                              width: 30,
-                              height: 30,
-                              child: Center(
-                                child: Text(chars[j],
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: blackColor,
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                            ),
-                            (_examQuestion[selectedQuestion]
-                                        .options![j]
-                                        .optionE ==
-                                    null)
-                                ? const Text("")
-                                : Expanded(
-                                    child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 5, right: 5),
-                                        child: /* CustomDmSans(
+                  giveAnswer(selectedQuestion, j);
+                },
+                child: Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            /// check wheter selected option is selected or not
+                            color: (_examQuestion[selectedQuestion]
+                                .options![j]
+                                .id ==
+                                _examQuestion[selectedQuestion].isSelect)
+                                ? greenColor
+                                : Colors.grey,
+                            offset: const Offset(0.0, 1.0), //(x,y)
+                            blurRadius: 4.0,
+                          ),
+                        ],
+                        border: Border.all(
+                            color: (_examQuestion[selectedQuestion]
+                                .options![j]
+                                .id ==
+                                _examQuestion[selectedQuestion].isSelect)
+                                ? greenColor
+                                : whiteColor,
+                            width: 2),
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.only(
+                        left: 10, top: 5, bottom: 5, right: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(50)),
+                          width: 30,
+                          height: 30,
+                          child: Center(
+                            child: Text(chars[j],
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: blackColor,
+                                    fontWeight: FontWeight.w600)),
+                          ),
+                        ),
+                        (_examQuestion[selectedQuestion]
+                            .options![j]
+                            .optionE ==
+                            null)
+                            ? const Text("")
+                            : Expanded(
+                          child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 5, right: 5),
+                              child: /* CustomDmSans(
                                 fontSize: 16,
                                 color: blackColor,
                                 text: _htmlConverter
@@ -1218,74 +1220,74 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                                     .optionE
                                     .toString()),
                               )*/
-                                            Text(
-                                          _htmlConverter.removeAllHtmlTags(
-                                              _examQuestion[selectedQuestion]
-                                                  .options![j]
-                                                  .optionE
-                                                  .toString()),
-                                          style: GoogleFonts.dmSans(
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600),
-                                        )),
-                                  ),
-                          ],
-                        )),
-                  );
-                })))
-        : Container(
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: List.generate(
-                    _examQuestion[selectedQuestion].options!.length, (j) {
-                  return InkWell(
-                    onTap: () {},
-                    child: Container(
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: getGoToOptionColor(j, 1),
-                                offset: const Offset(0.0, 1.0), //(x,y)
-                                blurRadius: 4.0,
-                              ),
-                            ],
-                            border: Border.all(
-                                color: getGoToOptionColor(j, 0), width: 2),
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        padding: const EdgeInsets.only(
-                            left: 10, top: 5, bottom: 5, right: 10),
-                        child: Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: whiteColor,
-                                  borderRadius: BorderRadius.circular(50)),
-                              width: 30,
-                              height: 30,
-                              child: Center(
-                                child: Text(chars[j],
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: greyColor,
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                            ),
-                            (_examQuestion[selectedQuestion]
+                              Text(
+                                _htmlConverter.removeAllHtmlTags(
+                                    _examQuestion[selectedQuestion]
                                         .options![j]
-                                        .optionE ==
-                                    null)
-                                ? const Text("")
-                                : Expanded(
-                                    child: Container(
-                                        padding: const EdgeInsets.only(
-                                            left: 5, right: 5),
-                                        child: /*CustomDmSans(
+                                        .optionE
+                                        .toString()),
+                                style: GoogleFonts.dmSans(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600),
+                              )),
+                        ),
+                      ],
+                    )),
+              );
+            })))
+        : Container(
+        margin: const EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(left: 5, right: 5),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: List.generate(
+                _examQuestion[selectedQuestion].options!.length, (j) {
+              return InkWell(
+                onTap: () {},
+                child: Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: getGoToOptionColor(j, 1),
+                            offset: const Offset(0.0, 1.0), //(x,y)
+                            blurRadius: 4.0,
+                          ),
+                        ],
+                        border: Border.all(
+                            color: getGoToOptionColor(j, 0), width: 2),
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.only(
+                        left: 10, top: 5, bottom: 5, right: 10),
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(50)),
+                          width: 30,
+                          height: 30,
+                          child: Center(
+                            child: Text(chars[j],
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: greyColor,
+                                    fontWeight: FontWeight.w600)),
+                          ),
+                        ),
+                        (_examQuestion[selectedQuestion]
+                            .options![j]
+                            .optionE ==
+                            null)
+                            ? const Text("")
+                            : Expanded(
+                          child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 5, right: 5),
+                              child: /*CustomDmSans(
                                 text: _htmlConverter
                                     .removeAllHtmlTags(_examQuestion[
                                 selectedQuestion]
@@ -1293,51 +1295,51 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                                     .optionE
                                     .toString()),
                               )*/
-                                            Text(
-                                          _htmlConverter.removeAllHtmlTags(
-                                              _examQuestion[selectedQuestion]
-                                                  .options![j]
-                                                  .optionE
-                                                  .toString()),
-                                          style: GoogleFonts.dmSans(
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600),
-                                        )),
-                                  ),
-                          ],
-                        )),
-                  );
-                })));
+                              Text(
+                                _htmlConverter.removeAllHtmlTags(
+                                    _examQuestion[selectedQuestion]
+                                        .options![j]
+                                        .optionE
+                                        .toString()),
+                                style: GoogleFonts.dmSans(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600),
+                              )),
+                        ),
+                      ],
+                    )),
+              );
+            })));
   }
 
   Color getGoToOptionColor(int j, int Type) {
     ///correct
     if (widget.examDetails.content!.examQuestion![selectedQuestion].options![j]
-                .correct ==
-            1 &&
+        .correct ==
+        1 &&
         widget.examDetails.content!.examQuestion![selectedQuestion].options![j]
-                .checked ==
+            .checked ==
             1) {
       return lightGreenColor;
     }
 
     ///wrong
     else if (widget.examDetails.content!.examQuestion![selectedQuestion]
-                .options![j].correct ==
-            0 &&
+        .options![j].correct ==
+        0 &&
         widget.examDetails.content!.examQuestion![selectedQuestion].options![j]
-                .checked ==
+            .checked ==
             1) {
       return redColor;
     }
 
     ///default
     else if (widget.examDetails.content!.examQuestion![selectedQuestion]
-                .options![j].correct ==
-            0 &&
+        .options![j].correct ==
+        0 &&
         widget.examDetails.content!.examQuestion![selectedQuestion].options![j]
-                .checked ==
+            .checked ==
             0) {
       ///border color
       if (Type == 1) {
@@ -1348,7 +1350,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
         return whiteColor;
       }
     } else if (widget.examDetails.content!.examQuestion![selectedQuestion]
-            .options![j].correct ==
+        .options![j].correct ==
         1) {
       return lightGreenColor;
     }
@@ -1366,7 +1368,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
             blurRadius: 4.0,
           ),
         ], color: whiteColor),
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 30),
         padding: const EdgeInsets.only(top: 0),
         child: Container(
           padding: const EdgeInsets.all(10),
@@ -1376,54 +1378,54 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                 child: (selectedQuestion <= 0)
                     ? Container()
                     : Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: Colors.black,
-                                side: const BorderSide(
-                                    color: Colors.purple, width: 1),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6))),
-                              ),
-                              onPressed: () {
-                                viewPrevQuestion();
-                              },
-                              child: const Text(
-                                "Previous",
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
-                              ))
-                        ],
-                      ),
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.black,
+                          side: const BorderSide(
+                              color: Colors.purple, width: 1),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(6))),
+                        ),
+                        onPressed: () {
+                          viewPrevQuestion();
+                        },
+                        child: const Text(
+                          "Previous",
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ))
+                  ],
+                ),
               ),
               widget.reviewExam == false
                   ? Container(
-                      margin: const EdgeInsets.all(0),
-                      child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: redColor,
-                            side:
-                                const BorderSide(color: Colors.black, width: 1),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6))),
-                          ),
-                          onPressed: () {
-                            removeAnswer(selectedQuestion);
-                          },
-                          child: const Text(
-                            "Clear",
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          )))
+                  margin: const EdgeInsets.all(0),
+                  child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: redColor,
+                        side:
+                        const BorderSide(color: Colors.black, width: 1),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(6))),
+                      ),
+                      onPressed: () {
+                        removeAnswer(selectedQuestion);
+                      },
+                      child: const Text(
+                        "Clear",
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      )))
                   : const SizedBox(),
               const SizedBox(
                 width: 10,
@@ -1432,42 +1434,42 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
                   child: (selectedQuestion == null
                       ? Container()
                       : Container(
-                          margin: const EdgeInsets.all(0),
-                          child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                backgroundColor: greenColor,
-                                side: const BorderSide(
-                                    color: Colors.black, width: 1),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(6))),
-                              ),
-                              onPressed: () {
-                                viewNextQuestion(
-                                    option: selectedOption.toString());
-                              },
-                              child: widget.reviewExam == false
-                                  ? Text(
-                                      selectedQuestion + 1 <
-                                              _examQuestion.length
-                                          ? "Save & Next"
-                                          : "Submit Exam",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: whiteColor,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  : Text(
-                                      selectedQuestion + 1 <
-                                              _examQuestion.length
-                                          ? "Next"
-                                          : "End",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: whiteColor,
-                                          fontWeight: FontWeight.bold),
-                                    )))))
+                      margin: const EdgeInsets.all(0),
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: greenColor,
+                            side: const BorderSide(
+                                color: Colors.black, width: 1),
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(6))),
+                          ),
+                          onPressed: () {
+                            viewNextQuestion(
+                                option: selectedOption.toString());
+                          },
+                          child: widget.reviewExam == false
+                              ? Text(
+                            selectedQuestion + 1 <
+                                _examQuestion.length
+                                ? "Save & Next"
+                                : "Submit Exam",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: whiteColor,
+                                fontWeight: FontWeight.bold),
+                          )
+                              : Text(
+                            selectedQuestion + 1 <
+                                _examQuestion.length
+                                ? "Next"
+                                : "End",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: whiteColor,
+                                fontWeight: FontWeight.bold),
+                          )))))
             ],
           ),
         ));
@@ -1477,16 +1479,16 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
     if (widget.type == 2) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (ctx) => DashboardPage()),
-          (route) => false);
+              (route) => false);
     }
     // if its came from daily Quiz Category
     else if (widget.type == 1) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (context) => DashboardPage(
-                    index: 2,
-                  )),
-          (route) => false);
+                index: 2,
+              )),
+              (route) => false);
 
       // Navigator.of(context).pop();
     }
@@ -1494,7 +1496,7 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
     else {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (ctx) => EditorialsPage()),
-          (route) => false);
+              (route) => false);
     }
   }
 }

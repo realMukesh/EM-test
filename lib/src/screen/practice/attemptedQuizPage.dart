@@ -214,83 +214,85 @@ class _AttemptedQuizPageState extends State<AttemptedQuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //backgroundColor: whiteColor,
-      appBar: AppBar(
+    return SafeArea(
+      child: Scaffold(
         //backgroundColor: whiteColor,
-        centerTitle: false,
-        elevation: 0.0,
-        title:  ToolbarTitle(
-          title: widget.title??"",
+        appBar: AppBar(
+          //backgroundColor: whiteColor,
+          centerTitle: false,
+          elevation: 0.0,
+          title:  ToolbarTitle(
+            title: widget.title??"",
+          ),
         ),
-      ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: _examQuestion.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                        child: Column(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: _examQuestion.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Center(
+                          child: Column(
+                        children: [
+                          Image.asset("assets/img/norecord.jpg"),
+                          CustomDmSans(
+                            text: "Solution is no longer available!!",
+                            fontSize: 20,
+                          )
+                        ],
+                      )),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset("assets/img/norecord.jpg"),
-                        CustomDmSans(
-                          text: "Solution is no longer available!!",
-                          fontSize: 20,
-                        )
-                      ],
-                    )),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      indicateMarks(),
-                      saveRow(),
-                      questionWidget(),
-                      optionsWidget(),
-                      (_examQuestion[selectedQuestion].isREAttmpted==0 && isRe_attempted)&&_examQuestion[selectedQuestion].savedQuestionId==null
-                          ? const SizedBox()
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                  child: Column(
-                                children: [
-                                  CustomDmSans(
-                                    text: "Solutions :",
-                                    color: greenColor,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Html(
-                                      data: _examQuestion[selectedQuestion]
-                                              .solutions!
-                                              .eSolutions ??
-                                          "",
-                                      style: {
-                                        "body": Style(
-                                          fontSize: FontSize(14.0),
-                                        ),
-                                        "p": Style(fontSize: FontSize(16.0))
-                                      },
+                        indicateMarks(),
+                        saveRow(),
+                        questionWidget(),
+                        optionsWidget(),
+                        (_examQuestion[selectedQuestion].isREAttmpted==0 && isRe_attempted)&&_examQuestion[selectedQuestion].savedQuestionId==null
+                            ? const SizedBox()
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Card(
+                                    child: Column(
+                                  children: [
+                                    CustomDmSans(
+                                      text: "Solutions :",
+                                      color: greenColor,
                                     ),
-                                  ),
-                                ],
-                              )),
-                            ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.2,
-                      ),
-                    ],
-                  ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: bottomButtons(),
-          ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Html(
+                                        data: _examQuestion[selectedQuestion]
+                                                .solutions!
+                                                .eSolutions ??
+                                            "",
+                                        style: {
+                                          "body": Style(
+                                            fontSize: FontSize(14.0),
+                                          ),
+                                          "p": Style(fontSize: FontSize(16.0))
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                              ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                        ),
+                      ],
+                    ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: bottomButtons(),
+            ),
 
-        ],
+          ],
+        ),
+        endDrawer: endDrawerWidget(context),
       ),
-      endDrawer: endDrawerWidget(context),
     );
   }
 
