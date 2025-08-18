@@ -19,7 +19,7 @@ class PageManager {
   }
 
   void init({String? url}) async {
-    print("url---------$url");
+    print("url--------kya h -$url");
     _audioPlayer = AudioPlayer();
     // await _audioPlayer?.setUrl(url.toString());
 

@@ -5,13 +5,11 @@ import 'package:english_madhyam/resrc/helper/api_repository/api_service.dart';
 import 'package:english_madhyam/resrc/models/model/editorial_detail_model/editorial_task_model.dart';
 import 'package:english_madhyam/resrc/utils/app_colors.dart';
 import 'package:english_madhyam/resrc/widgets/regularTextView.dart';
-
 import 'package:english_madhyam/main.dart';
 import 'package:english_madhyam/src/custom/toolbarTitle.dart';
 import 'package:english_madhyam/src/screen/editorials_page/controller/editorial_detail_controler.dart';
 import 'package:english_madhyam/src/screen/editorials_page/page/editorial_detail_widgets/audio_player.dart';
 import 'package:english_madhyam/src/screen/editorials_page/widgets/quiz_button.dart';
-import 'package:english_madhyam/src/screen/practice/performance_report.dart';
 import 'package:english_madhyam/src/utils/colors/colors.dart';
 import 'package:english_madhyam/src/screen/pages/page/custom_dmsans.dart';
 import 'package:english_madhyam/storage/cache_manager.dart';
@@ -117,6 +115,8 @@ class _CommonEditorialsDetailsPageState
 
   ///download pdf
   Future<void> _download(String? file) async {
+    print("file $file");
+
     setState(() {
       downloadStart = true;
     });
@@ -140,23 +140,29 @@ class _CommonEditorialsDetailsPageState
     //   await _startDownload(savePath, file!);
     // }
     else {
-      // print("user decline download permission");
+      print("user decline download permission");
       // handle the scenario when user declines the permissions
     }
   }
 
   ///dio for start downloading
   Future<void> _startDownload(String savePath, String file) async {
+    print("_startDownload");
+    print("_startDownload =>$savePath");
+    print("_startDownload =>$file");
+
     try {
       Map<String, dynamic> result =
           await apiService.downloadPdfFile(filePath: file, savePath: savePath);
+      print("_startDownload =>$result");
+
       setState(() {
         downloadStart = false;
       });
       await _showNotification(result);
       Fluttertoast.showToast(msg: "Pdf Downloaded in your app folder");
     } catch (ex) {
-      print(ex);
+      print("issu found $ex");
     }
   }
 
@@ -170,22 +176,24 @@ class _CommonEditorialsDetailsPageState
     final platform = const NotificationDetails(android: android);
     final json = jsonEncode(downloadStatus);
     final isSuccess = downloadStatus['isSuccess'];
+    print("isSuccess $isSuccess");
     // print("${platform.iOS!.subtitle}" + "platform information");
 
-    await flutterLocalNotificationsPlugin!.show(
+    /*await flutterLocalNotificationsPlugin!.show(
         0, // notification id
-        isSuccess ? 'Success' : 'Failure',
+        isSuccess == true ? 'Success' : 'Failure',
         isSuccess
             ? 'File has been downloaded successfully!'
             : 'There was an error while downloading the file.',
         platform,
-        payload: json);
+        payload: json);*/
     // print("Notification Shown ===================================");
     await _onSelectNotification(json);
   }
 
   ///when user tap on notification
   Future<void> _onSelectNotification(String json) async {
+    print("json $json");
     final obj = jsonDecode(json);
 
     if (obj['isSuccess']) {
@@ -658,84 +666,103 @@ class _CommonEditorialsDetailsPageState
                                       ),
                                     ),
                                   ),
-                               Row(
-                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                 children: [
-                                  readingData!=null? GestureDetector(
-                                     onTap: () {
-                                       setReadingData(
-                                           widget.editorial_id,
-                                          null);
-                                       for(int i=0;i<_controller
-                                           .descritionColorlist.length;i++){
-                                        setState(() {
-                                          _controller
-                                              .descritionColorlist[i].selected=false;
-                                        });
-                                       }
-                                       ScaffoldMessenger.of(context).showSnackBar(
-                                           SnackBar(
-                                               duration: Duration(seconds: 2),
-                                               content: Text("All data removed")));
-                                     },
-                                     child: Container(
-                                         padding: const EdgeInsets.all(5),
-                                         decoration: BoxDecoration(
-                                             color:
-                                             editable ? purplegrColor : white,
-                                             borderRadius:
-                                             BorderRadius.circular(8),
-                                             boxShadow: [
-                                               BoxShadow(
-                                                   color: Colors.grey
-                                                       .withOpacity(0.3),
-                                                   offset: Offset(-2, 3),
-                                                   spreadRadius: 3,
-                                                   blurRadius: 3)
-                                             ]),
-                                         child: Icon(
-                                           Icons.delete,
-                                           color: editable ? white : purpleColor,
-                                         )),
-                                   ):SizedBox(),
-                                   _controller.editorials.value.editorialDetails!
-                                       .pdf!.isNotEmpty
-                                       ? downloadStart == true
-                                       ? Container(
-                                     height: 20,
-                                     width: 20,
-                                     child: CircularProgressIndicator(
-                                       strokeWidth: 1.4,
-                                       color: lightYellowColor,
-                                     ),
-                                   )
-                                       : Align(
-                                     alignment: Alignment.topRight,
-                                     child: InkWell(
-                                       onTap: () async {
-                                         /// for downloading the pdf on tap
-                                         _download(_controller
-                                             .editorials
-                                             .value
-                                             .editorialDetails!
-                                             .pdf![0]
-                                             .file!);
-                                       },
-                                       child: Column(
-                                         crossAxisAlignment:
-                                         CrossAxisAlignment.center,
-                                         children: [
-                                           SvgPicture.asset(
-                                             "assets/icon/downloadicon.svg",
-                                           ),
-                                           CustomDmSans(text: "PDF")
-                                         ],
-                                       ),
-                                     ),
-                                   )
-                                       : const SizedBox(),
-                                 ],
-                               )
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      readingData != null
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                setReadingData(
+                                                    widget.editorial_id, null);
+                                                for (int i = 0;
+                                                    i <
+                                                        _controller
+                                                            .descritionColorlist
+                                                            .length;
+                                                    i++) {
+                                                  setState(() {
+                                                    _controller
+                                                        .descritionColorlist[i]
+                                                        .selected = false;
+                                                  });
+                                                }
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        duration: Duration(
+                                                            seconds: 2),
+                                                        content: Text(
+                                                            "All data removed")));
+                                              },
+                                              child: Container(
+                                                  padding:
+                                                      const EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                      color: editable
+                                                          ? purplegrColor
+                                                          : white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            offset:
+                                                                Offset(-2, 3),
+                                                            spreadRadius: 3,
+                                                            blurRadius: 3)
+                                                      ]),
+                                                  child: Icon(
+                                                    Icons.delete,
+                                                    color: editable
+                                                        ? white
+                                                        : purpleColor,
+                                                  )),
+                                            )
+                                          : SizedBox(),
+                                      _controller.editorials.value
+                                              .editorialDetails!.pdf!.isNotEmpty
+                                          ? downloadStart == true
+                                              ? Container(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 1.4,
+                                                    color: lightYellowColor,
+                                                  ),
+                                                )
+                                              : Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: InkWell(
+                                                    onTap: () async {
+                                                      /// for downloading the pdf on tap
+                                                      _download(_controller
+                                                          .editorials
+                                                          .value
+                                                          .editorialDetails!
+                                                          .pdf![0]
+                                                          .file!);
+                                                    },
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          "assets/icon/downloadicon.svg",
+                                                        ),
+                                                        CustomDmSans(
+                                                            text: "PDF")
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                          : const SizedBox(),
+                                    ],
+                                  )
                                 ],
                               ),
                             ),
