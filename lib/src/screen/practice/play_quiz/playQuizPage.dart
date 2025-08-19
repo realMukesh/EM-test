@@ -94,20 +94,22 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+
+
+    return Scaffold(
+      //backgroundColor: whiteColor,
+      appBar: AppBar(
         //backgroundColor: whiteColor,
-        appBar: AppBar(
-          //backgroundColor: whiteColor,
-          centerTitle: false,
-          //automaticallyImplyLeading: false,
-          elevation: 0.0,
-          title: const ToolbarTitle(
-            title: 'Play Exam',
-          ),
+        centerTitle: false,
+        //automaticallyImplyLeading: false,
+        elevation: 0.0,
+        title: const ToolbarTitle(
+          title: 'Play Exam',
         ),
-        body: WillPopScope(
-          onWillPop: exitDialog,
+      ),
+      body: WillPopScope(
+        onWillPop: exitDialog,
+        child: SafeArea(
           child: Stack(
             children: [
               SingleChildScrollView(
@@ -137,8 +139,8 @@ class _PlayQuizPageState extends State<PlayQuizPage> {
             ],
           ),
         ),
-        endDrawer: endDrawerWidget(),
       ),
+      endDrawer: endDrawerWidget(),
     );
   }
 

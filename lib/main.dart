@@ -131,14 +131,16 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: Colors.blue,
       ),
       initial: savedThemeMode ?? AdaptiveThemeMode.light,
-      builder: (theme, darkTheme) => GetMaterialApp(
-        theme: theme,
-        darkTheme: darkTheme,
-        debugShowCheckedModeBanner: false,
-        title: 'English Madhyam',
-        initialRoute: SplashScreen.routeName,
-        initialBinding: SplashBinding(),
-        getPages: AppPages.pages,
+      builder: (theme, darkTheme) => SafeArea(
+        child: GetMaterialApp(
+          theme: theme,
+          darkTheme: darkTheme,
+          debugShowCheckedModeBanner: false,
+          title: 'English Madhyam',
+          initialRoute: SplashScreen.routeName,
+          initialBinding: SplashBinding(),
+          getPages: AppPages.pages,
+        ),
       ),
     );
   }
